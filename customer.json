@@ -1432,6 +1432,14 @@
             "format": "int64"
           },
           {
+            "name": "bankAccountId",
+            "in": "path",
+            "description": "bankAccountId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
             "name": "bankAddressId",
             "in": "path",
             "description": "bankAddressId",
