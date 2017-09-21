@@ -7280,9 +7280,9 @@
         ],
         "parameters": [
           {
-            "name": "email",
+            "name": "noAccountId",
             "in": "path",
-            "description": "email",
+            "description": "noAccountId",
             "required": true,
             "type": "string"
           }
