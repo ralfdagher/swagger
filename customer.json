@@ -2619,6 +2619,14 @@
             "schema": {
               "$ref": "#/definitions/AccountPhoneRequest"
             }
+          },
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "accountId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
