@@ -186,7 +186,6 @@
         "payee": {
           "properties": {
             "countryCode": {
-              "default": "US",
               "description": "An explanation about the purpose of this instance.",
               "type": "string"
             },
@@ -199,7 +198,6 @@
               "type": "string"
             },
             "type": {
-              "default": "Business",
               "description": "An explanation about the purpose of this instance.",
               "type": "string"
             }
@@ -209,7 +207,6 @@
         "payeeAmount": {
           "properties": {
             "currency": {
-              "default": "USD",
               "description": "An explanation about the purpose of this instance.",
               "type": "string"
             },
