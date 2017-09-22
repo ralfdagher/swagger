@@ -173,15 +173,15 @@
       "properties": {
         "id": {
           "type": "string",
-          "description" : "An explanation about the purpose of this instance."
+          "description": "An explanation about the purpose of this instance."
         },
         "status": {
           "type": "string",
-          "description" : "An explanation about the purpose of this instance."
+          "description": "An explanation about the purpose of this instance."
         },
         "requestId": {
           "type": "string",
-          "description" : "An explanation about the purpose of this instance."
+          "description": "An explanation about the purpose of this instance."
         },
         "payee": {
           "properties": {
@@ -220,73 +220,73 @@
             }
           },
           "type": "object"
-        }
-      },
-      "dueDate": {
-        "type": "date-time",
-        "description" : "An explanation about the purpose of this instance."
-      },
-      "notes": {
-        "type": "string",
-        "description" : "An explanation about the purpose of this instance."
-      },
-      "externalReferenceId": {
-        "type": "string",
-        "description" : "An explanation about the purpose of this instance."
-      },
-      "attachments": {
-        "items": {
+        },
+        "dueDate": {
+          "type": "date-time",
+          "description": "An explanation about the purpose of this instance."
+        },
+        "notes": {
+          "type": "string",
+          "description": "An explanation about the purpose of this instance."
+        },
+        "externalReferenceId": {
+          "type": "string",
+          "description": "An explanation about the purpose of this instance."
+        },
+        "attachments": {
+          "items": {
+            "properties": {
+              "fileReference": {
+                "description": "An explanation about the purpose of this instance.",
+                "type": "string"
+              },
+              "name": {
+                "description": "An explanation about the purpose of this instance.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "ccEmails": {
+          "items": {
+            "description": "An explanation about the purpose of this instance.",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "exchangeRate": {
           "properties": {
-            "fileReference": {
+            "quoteId": {
+              "type": "string",
+              "description": "An explanation about the purpose of this instance."
+            },
+            "rate": {
               "description": "An explanation about the purpose of this instance.",
               "type": "string"
             },
-            "name": {
+            "baseCurrency": {
+              "default": "USD",
               "description": "An explanation about the purpose of this instance.",
               "type": "string"
+            },
+            "payeeCurrency": {
+              "default": "USD",
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            },
+            "timeCreated": {
+              "type": "date-time",
+              "description": "An explanation about the purpose of this instance."
             }
           },
           "type": "object"
         },
-        "type": "array"
-      },
-      "ccEmails": {
-        "items": {
-          "description": "An explanation about the purpose of this instance.",
-          "type": "string"
-        },
-        "type": "array"
-      },
-      "exchangeRate": {
-        "properties": {
-          "quoteId": {
-            "type": "string",
-            "description" : "An explanation about the purpose of this instance."
-          },
-          "rate": {
-            "description": "An explanation about the purpose of this instance.",
-            "type": "string"
-          },
-          "baseCurrency": {
-            "default": "USD",
-            "description": "An explanation about the purpose of this instance.",
-            "type": "string"
-          },
-          "payeeCurrency": {
-            "default": "USD",
-            "description": "An explanation about the purpose of this instance.",
-            "type": "string"
-          },
-          "timeCreated": {
-            "type": "date-time",
-            "description" : "An explanation about the purpose of this instance."
-          }
-        },
-        "type": "object"
-      },
-      "timeCreated": {
-        "type": "date-time",
-        "description" : "An explanation about the purpose of this instance."
+        "timeCreated": {
+          "type": "date-time",
+          "description": "An explanation about the purpose of this instance."
+        }
       }
     },
     "Error": {
