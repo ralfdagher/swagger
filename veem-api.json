@@ -1,0 +1,308 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Veem REST API",
+    "version": "1.0.0",
+    "title": "Swagger Veem",
+    "contact": {
+      "name": "Veem",
+      "url": "veem.com",
+      "email": "dev@veem.com"
+    },
+    "license": {
+      "name": ""
+    }
+  },
+  "host": "api.veem.com",
+  "basePath": "/api/v1.0",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/payments": {
+      "post": {
+        "summary": "Create payment and send to recipient",
+        "operationId": "createPayment",
+        "tags": [
+          "payments"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "description": "Create Payment Request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreatePaymentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment successfully created",
+            "headers": {
+            }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreatePaymentResponse"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+  },
+  "definitions": {
+    "CreatePaymentRequest": {
+      "required": [
+        "requestId",
+        "payee",
+        "payeeAmount",
+        "dueDate",
+        "exchangeRateQuoteId"
+      ],
+      "properties": {
+        "requestId": {
+          "type": "string",
+          "description" : "An explanation about the purpose of this instance."
+        },
+        "payee": {
+          "properties": {
+            "countryCode": {
+              "default": "US",
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            },
+            "email": {
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            },
+            "phone": {
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            },
+            "type": {
+              "default": "Business",
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "payeeAmount": {
+          "properties": {
+            "currency": {
+              "default": "USD",
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            },
+            "number": {
+              "description": "An explanation about the purpose of this instance.",
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "dueDate": {
+        "type": "date-time",
+        "description" : "An explanation about the purpose of this instance."
+      },
+      "notes": {
+        "type": "string",
+        "description" : "An explanation about the purpose of this instance."
+      },
+      "externalReferenceId": {
+        "type": "string",
+        "description" : "An explanation about the purpose of this instance."
+      },
+      "attachments": {
+        "items": {
+          "properties": {
+            "fileReference": {
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            },
+            "name": {
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "ccEmails": {
+        "items": {
+          "description": "An explanation about the purpose of this instance.",
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "exchangeRateQuoteId": {
+        "type": "string",
+        "description" : "An explanation about the purpose of this instance."
+      },
+      "localTime": {
+        "type": "date-time",
+        "description" : "An explanation about the purpose of this instance."
+      }
+    },
+    "CreatePaymentResponse": {
+      "required": [
+        "id",
+        "status",
+        "requestId",
+        "payee",
+        "payeeAmount",
+        "dueDate",
+        "exchangeRate",
+        "timeCreated"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description" : "An explanation about the purpose of this instance."
+        },
+        "status": {
+          "type": "string",
+          "description" : "An explanation about the purpose of this instance."
+        },
+        "requestId": {
+          "type": "string",
+          "description" : "An explanation about the purpose of this instance."
+        },
+        "payee": {
+          "properties": {
+            "countryCode": {
+              "default": "US",
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            },
+            "email": {
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            },
+            "phone": {
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            },
+            "type": {
+              "default": "Business",
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "payeeAmount": {
+          "properties": {
+            "currency": {
+              "default": "USD",
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            },
+            "number": {
+              "description": "An explanation about the purpose of this instance.",
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "dueDate": {
+        "type": "date-time",
+        "description" : "An explanation about the purpose of this instance."
+      },
+      "notes": {
+        "type": "string",
+        "description" : "An explanation about the purpose of this instance."
+      },
+      "externalReferenceId": {
+        "type": "string",
+        "description" : "An explanation about the purpose of this instance."
+      },
+      "attachments": {
+        "items": {
+          "properties": {
+            "fileReference": {
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            },
+            "name": {
+              "description": "An explanation about the purpose of this instance.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "ccEmails": {
+        "items": {
+          "description": "An explanation about the purpose of this instance.",
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "exchangeRate": {
+        "properties": {
+          "quoteId": {
+            "type": "string",
+            "description" : "An explanation about the purpose of this instance."
+          },
+          "rate": {
+            "description": "An explanation about the purpose of this instance.",
+            "type": "string"
+          },
+          "baseCurrency": {
+            "default": "USD",
+            "description": "An explanation about the purpose of this instance.",
+            "type": "string"
+          },
+          "payeeCurrency": {
+            "default": "USD",
+            "description": "An explanation about the purpose of this instance.",
+            "type": "string"
+          },
+          "timeCreated": {
+            "type": "date-time",
+            "description" : "An explanation about the purpose of this instance."
+          }
+        },
+        "type": "object"
+      },
+      "timeCreated": {
+        "type": "date-time",
+        "description" : "An explanation about the purpose of this instance."
+      }
+    },
+    "Error": {
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
