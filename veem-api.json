@@ -222,7 +222,7 @@
           "type": "object"
         },
         "dueDate": {
-          "type": "date-time",
+          "type": "string",
           "description": "An explanation about the purpose of this instance."
         },
         "notes": {
@@ -277,7 +277,7 @@
               "type": "string"
             },
             "timeCreated": {
-              "type": "date-time",
+              "type": "string",
               "description": "An explanation about the purpose of this instance."
             }
           },
