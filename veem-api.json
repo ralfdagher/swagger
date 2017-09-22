@@ -113,7 +113,7 @@
             }
           },
           "type": "object"
-        }
+        },
         "dueDate": {
           "type": "string",
           "description": "An explanation about the purpose of this instance."
