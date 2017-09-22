@@ -116,7 +116,7 @@
         }
       },
       "dueDate": {
-        "type": "date-time",
+        "type": "string",
         "description" : "An explanation about the purpose of this instance."
       },
       "notes": {
@@ -155,7 +155,7 @@
         "description" : "An explanation about the purpose of this instance."
       },
       "localTime": {
-        "type": "date-time",
+        "type": "string",
         "description" : "An explanation about the purpose of this instance."
       }
     },
@@ -284,7 +284,7 @@
           "type": "object"
         },
         "timeCreated": {
-          "type": "date-time",
+          "type": "String",
           "description": "An explanation about the purpose of this instance."
         }
       }
