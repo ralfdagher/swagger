@@ -74,7 +74,7 @@
       "properties": {
         "requestId": {
           "type": "string",
-          "description" : "An explanation about the purpose of this instance."
+          "description": "An explanation about the purpose of this instance."
         },
         "payee": {
           "properties": {
@@ -114,49 +114,49 @@
           },
           "type": "object"
         }
-      },
-      "dueDate": {
-        "type": "string",
-        "description" : "An explanation about the purpose of this instance."
-      },
-      "notes": {
-        "type": "string",
-        "description" : "An explanation about the purpose of this instance."
-      },
-      "externalReferenceId": {
-        "type": "string",
-        "description" : "An explanation about the purpose of this instance."
-      },
-      "attachments": {
-        "items": {
-          "properties": {
-            "fileReference": {
-              "description": "An explanation about the purpose of this instance.",
-              "type": "string"
+        "dueDate": {
+          "type": "string",
+          "description": "An explanation about the purpose of this instance."
+        },
+        "notes": {
+          "type": "string",
+          "description": "An explanation about the purpose of this instance."
+        },
+        "externalReferenceId": {
+          "type": "string",
+          "description": "An explanation about the purpose of this instance."
+        },
+        "attachments": {
+          "items": {
+            "properties": {
+              "fileReference": {
+                "description": "An explanation about the purpose of this instance.",
+                "type": "string"
+              },
+              "name": {
+                "description": "An explanation about the purpose of this instance.",
+                "type": "string"
+              }
             },
-            "name": {
-              "description": "An explanation about the purpose of this instance.",
-              "type": "string"
-            }
+            "type": "object"
           },
-          "type": "object"
+          "type": "array"
         },
-        "type": "array"
-      },
-      "ccEmails": {
-        "items": {
-          "description": "An explanation about the purpose of this instance.",
-          "type": "string"
+        "ccEmails": {
+          "items": {
+            "description": "An explanation about the purpose of this instance.",
+            "type": "string"
+          },
+          "type": "array"
         },
-        "type": "array"
-      },
-      "exchangeRateQuoteId": {
-        "type": "string",
-        "description" : "An explanation about the purpose of this instance."
-      },
-      "localTime": {
-        "type": "string",
-        "description" : "An explanation about the purpose of this instance."
+        "exchangeRateQuoteId": {
+          "type": "string",
+          "description": "An explanation about the purpose of this instance."
+        },
+        "localTime": {
+          "type": "string",
+          "description": "An explanation about the purpose of this instance."
+        }
       }
     },
     "CreatePaymentResponse": {
