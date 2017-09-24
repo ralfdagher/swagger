@@ -52,13 +52,13 @@
             "schema": {
               "$ref": "#/definitions/CreatePaymentResponse"
             }
-          },
-          "default": {
-            "description": "unexpected error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
           }
+//          "default": {
+//            "description": "unexpected error",
+//            "schema": {
+//              "$ref": "#/definitions/Error"
+//            }
+//          }
         }
       }
   },
