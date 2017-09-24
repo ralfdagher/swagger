@@ -47,7 +47,6 @@
           "200": {
             "description": "Payment successfully created",
             "headers": {
-            }
             },
             "schema": {
               "$ref": "#/definitions/CreatePaymentResponse"
