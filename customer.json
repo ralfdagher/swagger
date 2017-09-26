@@ -84,12 +84,6 @@
             "schema": {
               "$ref": "#/definitions/PaymentRequest"
             }
-          },
-          {
-            "in": "body",
-            "name": "authentication",
-            "description": "authentication",
-            "required": false
           }
         ],
         "responses": {
