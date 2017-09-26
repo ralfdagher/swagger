@@ -423,7 +423,8 @@
       "type": "object",
       "properties": {
         "actorInfo": {
-          "type": "string"
+          "type": "string",
+          "example": "actor information"
         },
         "attachments": {
           "type": "array",
