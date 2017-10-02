@@ -42,6 +42,12 @@
       "description": "Exchange Rate APIs"
     }
   ],
+  "consumes":[
+    "application/json"
+  ],
+  "produces":[
+    "application/json"
+  ],
   "paths": {
     "/veem/country-currency-map": {
       "get": {
