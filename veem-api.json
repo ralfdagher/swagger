@@ -20,8 +20,7 @@
       "type": "oauth2",
       "authorizationUrl": "http://dev-admin.veem.com/oauth/authorize",
       "tokenUrl": "http://dev-admin.veem.com/oauth/token",
-      "flow": "accessCode",
-
+      "flow": "accessCode"
     }
   },
   "security": "oauth",
