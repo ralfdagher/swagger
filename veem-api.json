@@ -24,7 +24,7 @@
     }
   },
   "security": [
-    {"oauth":[]}
+   // {"oauth":[]}
   ],
   "host": "dev-admin.veem.com",
   "x-headers" : [
