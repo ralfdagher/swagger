@@ -35,7 +35,7 @@
     "/veem/v1.0/meta/country-currency-map": {
       "get": {
         "tags": [
-          "meta-controller"
+          "meta-controll"
         ],
         "summary": "Country Currency Map",
         "description": "Returns a list of countries supported and currencies for each",
