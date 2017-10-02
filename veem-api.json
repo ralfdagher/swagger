@@ -10,16 +10,16 @@
       "url": "veem.com",
       "email": "dev@veem.com"
     },
-    "securityDefinitions": {
-      "oauth": {
-        "type": "oauth2",
-        "authorizationUrl": "http://dev-admin.veem.com/oauth/authorize",
-        "flow": "accessCode",
-      }
-    },
     "license": {
       "name": "license",
       "url": "License URL"
+    }
+  },
+  "securityDefinitions": {
+    "oauth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://dev-admin.veem.com/oauth/authorize",
+      "flow": "accessCode",
     }
   },
   "host": "dev-admin.veem.com",
