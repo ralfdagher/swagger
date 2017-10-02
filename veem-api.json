@@ -23,7 +23,7 @@
       "flow": "accessCode"
     }
   },
-  "security": "oauth",
+  "security": ["oauth"],
   "host": "dev-admin.veem.com",
   "basePath": "/",
   "tags": [
