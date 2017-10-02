@@ -19,9 +19,12 @@
     "oauth": {
       "type": "oauth2",
       "authorizationUrl": "http://dev-admin.veem.com/oauth/authorize",
+      "tokenUrl": "http://dev-admin.veem.com/oauth/token",
       "flow": "accessCode",
+
     }
   },
+  "security": "oauth",
   "host": "dev-admin.veem.com",
   "basePath": "/",
   "tags": [
