@@ -29,7 +29,7 @@
   "host": "dev-admin.veem.com",
   "x-headers" : [
     {"key":"content-type","value":"application/json"},
-    {"key":"accept","value":"application/json"},
+    {"key":"accept","value":"application/json"}
   ],
   "basePath": "/",
   "tags": [
