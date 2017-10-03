@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Veem REST API",
+    "description": "Veem RET API",
     "version": "1.0.0",
     "title": "Veem API",
     "termsOfService": "API TOS",
