@@ -2,21 +2,28 @@
   "swagger": "2.0",
   "info": {
     "description": "Veem REST API",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "title": "Veem API",
+    "description": "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
     "termsOfService": "API TOS",
     "contact": {
-      "name": "Veem",
-      "url": "veem.com",
-      "email": "dev@veem.com"
+      "name": "Veem"
     },
     "license": {
-      "name": "license",
-      "url": "License URL"
+      "name": "license"
     }
   },
   "host": "dev-admin.veem.com",
   "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "tags": [
     {
       "name": "meta-controller",
@@ -32,10 +39,10 @@
     }
   ],
   "paths": {
-    "/veem/v1.0/meta/country-currency-map": {
+    "veem/v1.0/meta/country-currency-map": {
       "get": {
         "tags": [
-          "meta-controll"
+          "meta-controller"
         ],
         "summary": "Country Currency Map",
         "description": "Returns a list of countries supported and currencies for each",
