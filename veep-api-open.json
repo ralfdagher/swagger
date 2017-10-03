@@ -4,7 +4,6 @@
     "description": "Veem REST API",
     "version": "1.0.0",
     "title": "Veem API",
-    "description": "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
     "termsOfService": "API TOS",
     "contact": {
       "name": "Veem"
