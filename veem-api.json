@@ -24,6 +24,7 @@
     }
   },
   "security": [
+    {"oauth":[]}
   ],
   "host": "dev-admin.veem.com",
   "x-headers" : [
@@ -44,6 +45,9 @@
       "name": "exchange-rate-controller",
       "description": "Exchange Rate APIs"
     }
+  ],
+  "schemes": [
+    "http"
   ],
   "consumes":[
     "application/json"
