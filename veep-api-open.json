@@ -46,12 +46,6 @@
         "summary": "Country Currency Map",
         "description": "Returns a list of countries supported and currencies for each",
         "operationId": "getCountryCurrencyMapUsingGET",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
             "description": "Success",
