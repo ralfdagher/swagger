@@ -38,7 +38,7 @@
     }
   ],
   "paths": {
-    "veem/v1.0/meta/country-currency-map": {
+    "/veem/v1.0/meta/country-currency-map": {
       "get": {
         "tags": [
           "meta-controller"
