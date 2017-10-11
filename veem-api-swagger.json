@@ -15,13 +15,13 @@
       "url": "License URL"
     }
   },
-  "host": "qa-admin.veem.com",
+  "host": "dev-admin.veem.com",
   "basePath": "/",
   "securityDefinitions": {
     "oauth": {
       "type": "oauth2",
-      "authorizationUrl": "http://qa-admin.veem.com/oauth/authorize",
-      "tokenUrl": "http://qa-admin.veem.com/oauth/token",
+      "authorizationUrl": "http://dev-admin.veem.com/oauth/authorize",
+      "tokenUrl": "http://dev-admin.veem.com/oauth/token",
       "flow": "accessCode"
     }
   },
