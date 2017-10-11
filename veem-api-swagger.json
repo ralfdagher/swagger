@@ -15,23 +15,24 @@
       "url": "License URL"
     }
   },
+  "host": "qa-admin.veem.com",
+  "basePath": "/",
   "securityDefinitions": {
     "oauth": {
       "type": "oauth2",
-      "authorizationUrl": "http://dev-admin.veem.com/oauth/authorize",
-      "tokenUrl": "http://dev-admin.veem.com/oauth/token",
+      "authorizationUrl": "http://qa-admin.veem.com/oauth/authorize",
+      "tokenUrl": "http://qa-admin.veem.com/oauth/token",
       "flow": "accessCode"
     }
   },
   "security": [
     {"oauth":[]}
   ],
-  "schemes": [
-    "http"
-  ],
-  "host": "dev-admin.veem.com",
-  "basePath": "/",
   "tags": [
+    {
+      "name": "attachment-controller",
+      "description": "Attachment Controller"
+    },
     {
       "name": "meta-controller",
       "description": "Information about the API"
@@ -43,9 +44,217 @@
     {
       "name": "exchange-rate-controller",
       "description": "Exchange Rate APIs"
+    },
+    {
+      "name": "account-controller",
+      "description": "account management apis"
     }
   ],
   "paths": {
+    "/public/veem/v1.0/country-currency-map": {
+      "get": {
+        "tags": [
+          "meta-controller"
+        ],
+        "summary": "Country Currency Map",
+        "description": "Returns a list of countries supported and currencies for each",
+        "operationId": "getCountryCurrencyMapUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CountryCurrencyResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          }
+        }
+      }
+    },
+    "/veem/v1.0/accounts/contacts": {
+      "post": {
+        "tags": [
+          "account-controller"
+        ],
+        "summary": "createContact",
+        "description": "create a contact and sends an invitation",
+        "operationId": "createContactUsingPOST_1",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "description": "request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ContactRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, a contact is created in Veem",
+            "schema": {
+              "$ref": "#/definitions/ContactResponse"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ContactResponse"
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
+    "/veem/v1.0/accounts/contacts/batch": {
+      "post": {
+        "tags": [
+          "account-controller"
+        ],
+        "summary": "createContactInBatch",
+        "description": "create a contact and sends an invitation",
+        "operationId": "createContactUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "description": "request",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ContactRequest"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, a contact is created in Veem",
+            "schema": {
+              "$ref": "#/definitions/ContactResponse"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ContactResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
+    "/veem/v1.0/attachments/Payment": {
+      "post": {
+        "tags": [
+          "attachment-controller"
+        ],
+        "summary": "Uploads the external attachment for an entity Payment or Invoice",
+        "operationId": "uploadAttachmentUsingPOST",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "file",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/FileAttachment"
+            }
+          },
+          "400": {
+            "description": "Unsupported file extension; Unable to upload file",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
     "/veem/v1.0/exchangerates/quotes": {
       "post": {
         "tags": [
@@ -78,11 +287,14 @@
               "$ref": "#/definitions/ExchangeRateResponse"
             }
           },
-          "401": {
+          "400": {
             "description": "Unauthorized, the token is invalid or expired",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
           },
           "500": {
             "description": "Internal Server Error, see the error code and API doc for reference"
@@ -96,43 +308,7 @@
         }
       }
     },
-    "/veem/v1.0/meta/country-currency-map": {
-      "get": {
-        "tags": [
-          "meta-controller"
-        ],
-        "summary": "Country Currency Map",
-        "description": "Returns a list of countries supported and currencies for each",
-        "operationId": "getCountryCurrencyMapUsingGET",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/CountryCurrencyResponse"
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized, the token is invalid or expired"
-          },
-          "500": {
-            "description": "Internal Server Error, see the error code and API doc for reference"
-          },
-          "403": {
-            "description": "Forbidden, the token owner doesn't have permission to operate current API"
-          }
-        }
-      }
-    },
-    "/veem/v1.0/meta/hello": {
+    "/veem/v1.0/hello": {
       "get": {
         "tags": [
           "meta-controller"
@@ -151,6 +327,12 @@
             "description": "Success",
             "schema": {
               "type": "string"
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "401": {
@@ -192,7 +374,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success, a payment is created in Veeem",
+            "description": "Success, a payment is created in Veem",
             "schema": {
               "$ref": "#/definitions/PaymentResponse"
             }
@@ -203,11 +385,14 @@
               "$ref": "#/definitions/PaymentResponse"
             }
           },
-          "401": {
+          "400": {
             "description": "Unauthorized, the token is invalid or expired",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
           },
           "500": {
             "description": "Internal Server Error, see the error code and API doc for reference"
@@ -252,11 +437,14 @@
               "$ref": "#/definitions/PaymentResponse"
             }
           },
-          "401": {
+          "400": {
             "description": "Unauthorized, the token is invalid or expired",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
           },
           "500": {
             "description": "Internal Server Error, see the error code and API doc for reference"
@@ -275,15 +463,17 @@
     "SimpleAccount": {
       "type": "object",
       "required": [
-        "businessName",
         "countryCode",
         "email",
-        "phoneNumber"
+        "firstName",
+        "lastName",
+        "phoneNumber",
+        "type"
       ],
       "properties": {
         "businessName": {
           "type": "string",
-          "description": "Business name or First Name Last Name of receiver"
+          "description": "The name of the receiver's business, required when account type is business"
         },
         "countryCode": {
           "type": "string",
@@ -564,9 +754,358 @@
           "type": "string",
           "description": "The email of the receiver"
         },
+        "firstName": {
+          "type": "string",
+          "description": "The first name of the receiver"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The last name of the receiver"
+        },
         "phoneNumber": {
           "type": "string",
           "description": "The free form phone number"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the receiver",
+          "enum": [
+            "Incomplete",
+            "Business",
+            "Personal"
+          ]
+        }
+      }
+    },
+    "ContactRequest": {
+      "type": "object",
+      "required": [
+        "countryCode",
+        "email",
+        "firstName",
+        "lastName",
+        "phoneNumber",
+        "type"
+      ],
+      "properties": {
+        "autoRemind": {
+          "type": "boolean"
+        },
+        "businessName": {
+          "type": "string",
+          "description": "The name of the receiver's business, required when account type is business"
+        },
+        "countryCode": {
+          "type": "string",
+          "description": "The 2 letter ISO country codes,ISO Alpha-2",
+          "enum": [
+            "UNDEFINED",
+            "AC",
+            "AD",
+            "AE",
+            "AF",
+            "AG",
+            "AI",
+            "AL",
+            "AM",
+            "AN",
+            "AO",
+            "AQ",
+            "AR",
+            "AS",
+            "AT",
+            "AU",
+            "AW",
+            "AX",
+            "AZ",
+            "BA",
+            "BB",
+            "BD",
+            "BE",
+            "BF",
+            "BG",
+            "BH",
+            "BI",
+            "BJ",
+            "BL",
+            "BM",
+            "BN",
+            "BO",
+            "BQ",
+            "BR",
+            "BS",
+            "BT",
+            "BU",
+            "BV",
+            "BW",
+            "BY",
+            "BZ",
+            "CA",
+            "CC",
+            "CD",
+            "CF",
+            "CG",
+            "CH",
+            "CI",
+            "CK",
+            "CL",
+            "CM",
+            "CN",
+            "CO",
+            "CP",
+            "CR",
+            "CS",
+            "CU",
+            "CV",
+            "CW",
+            "CX",
+            "CY",
+            "CZ",
+            "DE",
+            "DG",
+            "DJ",
+            "DK",
+            "DM",
+            "DO",
+            "DZ",
+            "EA",
+            "EC",
+            "EE",
+            "EG",
+            "EH",
+            "ER",
+            "ES",
+            "ET",
+            "EU",
+            "FI",
+            "FJ",
+            "FK",
+            "FM",
+            "FO",
+            "FR",
+            "FX",
+            "GA",
+            "GB",
+            "GD",
+            "GE",
+            "GF",
+            "GG",
+            "GH",
+            "GI",
+            "GL",
+            "GM",
+            "GN",
+            "GP",
+            "GQ",
+            "GR",
+            "GS",
+            "GT",
+            "GU",
+            "GW",
+            "GY",
+            "HK",
+            "HM",
+            "HN",
+            "HR",
+            "HT",
+            "HU",
+            "IC",
+            "ID",
+            "IE",
+            "IL",
+            "IM",
+            "IN",
+            "IO",
+            "IQ",
+            "IR",
+            "IS",
+            "IT",
+            "JE",
+            "JM",
+            "JO",
+            "JP",
+            "KE",
+            "KG",
+            "KH",
+            "KI",
+            "KM",
+            "KN",
+            "KP",
+            "KR",
+            "KW",
+            "KY",
+            "KZ",
+            "LA",
+            "LB",
+            "LC",
+            "LI",
+            "LK",
+            "LR",
+            "LS",
+            "LT",
+            "LU",
+            "LV",
+            "LY",
+            "MA",
+            "MC",
+            "MD",
+            "ME",
+            "MF",
+            "MG",
+            "MH",
+            "MK",
+            "ML",
+            "MM",
+            "MN",
+            "MO",
+            "MP",
+            "MQ",
+            "MR",
+            "MS",
+            "MT",
+            "MU",
+            "MV",
+            "MW",
+            "MX",
+            "MY",
+            "MZ",
+            "NA",
+            "NC",
+            "NE",
+            "NF",
+            "NG",
+            "NI",
+            "NL",
+            "NO",
+            "NP",
+            "NR",
+            "NT",
+            "NU",
+            "NZ",
+            "OM",
+            "PA",
+            "PE",
+            "PF",
+            "PG",
+            "PH",
+            "PK",
+            "PL",
+            "PM",
+            "PN",
+            "PR",
+            "PS",
+            "PT",
+            "PW",
+            "PY",
+            "QA",
+            "RE",
+            "RO",
+            "RS",
+            "RU",
+            "RW",
+            "SA",
+            "SB",
+            "SC",
+            "SD",
+            "SE",
+            "SF",
+            "SG",
+            "SH",
+            "SI",
+            "SJ",
+            "SK",
+            "SL",
+            "SM",
+            "SN",
+            "SO",
+            "SR",
+            "SS",
+            "ST",
+            "SU",
+            "SV",
+            "SX",
+            "SY",
+            "SZ",
+            "TA",
+            "TC",
+            "TD",
+            "TF",
+            "TG",
+            "TH",
+            "TJ",
+            "TK",
+            "TL",
+            "TM",
+            "TN",
+            "TO",
+            "TP",
+            "TR",
+            "TT",
+            "TV",
+            "TW",
+            "TZ",
+            "UA",
+            "UG",
+            "UK",
+            "UM",
+            "US",
+            "UY",
+            "UZ",
+            "VA",
+            "VC",
+            "VE",
+            "VG",
+            "VI",
+            "VN",
+            "VU",
+            "WF",
+            "WS",
+            "XK",
+            "YE",
+            "YT",
+            "YU",
+            "ZA",
+            "ZM",
+            "ZR",
+            "ZW"
+          ]
+        },
+        "email": {
+          "type": "string",
+          "description": "The email of the receiver"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The first name of the receiver"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The last name of the receiver"
+        },
+        "notifyEvents": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Viewed",
+              "SignedUp",
+              "PaymentReady",
+              "Closed"
+            ]
+          }
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The free form phone number"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the receiver",
+          "enum": [
+            "Incomplete",
+            "Business",
+            "Personal"
+          ]
         }
       }
     },
@@ -849,6 +1388,9 @@
         },
         "countryName": {
           "type": "string"
+        },
+        "purposeOfPaymentRequired": {
+          "type": "boolean"
         },
         "receivingCurrencies": {
           "type": "array",
@@ -1234,6 +1776,9 @@
         }
       }
     },
+    "ContactResponse": {
+      "type": "object"
+    },
     "PaymentRequest": {
       "type": "object",
       "required": [
@@ -1244,7 +1789,7 @@
       "properties": {
         "attachments": {
           "type": "array",
-          "description": "The list of external invoices to be attached with payment. The files can be uploaded using\"file upload apis",
+          "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
           "items": {
             "$ref": "#/definitions/FileAttachment"
           }
@@ -1282,7 +1827,7 @@
           "enum": [
             "Goods",
             "Services",
-            "Charitiable",
+            "Charitable",
             "Other"
           ]
         }
@@ -1291,18 +1836,18 @@
     "FileAttachment": {
       "type": "object",
       "required": [
-        "fileReference",
         "name",
+        "referenceId",
         "type"
       ],
       "properties": {
-        "fileReference": {
-          "type": "string",
-          "description": "The file reference id received from Veem after file upload is complete"
-        },
         "name": {
           "type": "string",
           "description": "The name of the file (including the extension)"
+        },
+        "referenceId": {
+          "type": "string",
+          "description": "The file reference id received from Veem after file upload is complete"
         },
         "type": {
           "type": "string",
@@ -1318,7 +1863,6 @@
       "type": "object",
       "required": [
         "fromCurrency",
-        "toAmount",
         "toCurrency"
       ],
       "properties": {
@@ -1991,21 +2535,6 @@
         }
       }
     },
-    "ErrorResponseItem": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "userMessage": {
-          "type": "string"
-        }
-      }
-    },
     "AlignMonetaryAmount": {
       "type": "object",
       "properties": {
@@ -2626,22 +3155,24 @@
     },
     "ErrorResponse": {
       "type": "object",
+      "required": [
+        "code",
+        "error",
+        "message"
+      ],
       "properties": {
         "code": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "description": "The error code, different than HTTP status codes"
         },
         "error": {
-          "type": "string"
-        },
-        "errorItems": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ErrorResponseItem"
-          }
+          "type": "string",
+          "description": "The short message"
         },
         "message": {
-          "type": "string"
+          "type": "string",
+          "description": "The detailed, developer friendly message"
         }
       }
     },
@@ -2659,7 +3190,7 @@
       "properties": {
         "attachments": {
           "type": "array",
-          "description": "The list of external invoices to be attached with payment. The files can be uploaded using\"file upload apis",
+          "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
           "items": {
             "$ref": "#/definitions/FileAttachment"
           }
@@ -2706,7 +3237,7 @@
           "enum": [
             "Goods",
             "Services",
-            "Charitiable",
+            "Charitable",
             "Other"
           ]
         },
