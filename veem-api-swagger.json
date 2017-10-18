@@ -15,13 +15,13 @@
       "url": "License URL"
     }
   },
-  "host": "dev-admin.veem.com",
+  "host": "qa-admin.veem.com",
   "basePath": "/",
   "securityDefinitions": {
     "oauth": {
       "type": "oauth2",
-      "authorizationUrl": "http://dev-admin.veem.com/oauth/authorize",
-      "tokenUrl": "http://dev-admin.veem.com/oauth/token",
+      "authorizationUrl": "http://qa-admin.veem.com/oauth/authorize",
+      "tokenUrl": "http://qa-admin.veem.com/oauth/token",
       "flow": "accessCode"
     }
   },
@@ -51,7 +51,7 @@
     }
   ],
   "paths": {
-    "/public/veem/v1.0/country-currency-map": {
+    "/veem/public/v1.0/country-currency-map": {
       "get": {
         "tags": [
           "meta-controller"
