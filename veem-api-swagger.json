@@ -17,6 +17,7 @@
   },
   "host": "qa-admin.veem.com",
   "basePath": "/",
+  "schemes": ["http", "https"],
   "securityDefinitions": {
     "oauth": {
       "type": "oauth2",
