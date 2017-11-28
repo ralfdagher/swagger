@@ -54,8 +54,6 @@
   "paths": {
     "/veem/public/v1.0/country-currency-map": {
       "get": {
-        "security": [
-        ],
         "tags": [
           "meta-controller"
         ],
@@ -220,7 +218,7 @@
         }
       }
     },
-    "/veem/v1.0/attachments/Payment": {
+    "/veem/v1.0/attachments/payment": {
       "post": {
         "tags": [
           "attachment-controller"
@@ -351,6 +349,101 @@
       }
     },
     "/veem/v1.0/payments": {
+      "get": {
+        "tags": [
+          "payment-controller"
+        ],
+        "summary": "getPaymentsByStatus",
+        "description": "get payments for this account, filtered by status",
+        "operationId": "getPaymentsByStatusUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "status",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Drafted",
+                "Sent",
+                "Claimed",
+                "PendingAuth",
+                "Authorized",
+                "InProgress",
+                "Complete",
+                "Cancelled",
+                "Closed",
+                "Reversed"
+              ]
+            },
+            "collectionFormat": "multi",
+            "enum": [
+              "Drafted",
+              "Sent",
+              "Claimed",
+              "PendingAuth",
+              "Authorized",
+              "InProgress",
+              "Complete",
+              "Cancelled",
+              "Closed",
+              "Reversed"
+            ]
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "pageNumber",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "pageSize",
+            "required": false,
+            "type": "integer",
+            "default": 25,
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, a page of payment objects is returned",
+            "schema": {
+              "$ref": "#/definitions/PaymentResponse"
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      },
       "post": {
         "tags": [
           "payment-controller"
@@ -459,6 +552,121 @@
             "description": "Not Found, the resource not found"
           }
         }
+      }
+    },
+    "/veem/v1.0/payments/{paymentId}/approve": {
+      "post": {
+        "tags": [
+          "payment-controller"
+        ],
+        "summary": "approvePayment",
+        "description": "approve a payment",
+        "operationId": "approvePaymentUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "paymentId",
+            "in": "path",
+            "description": "paymentId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, an approved payment object is returned",
+            "schema": {
+              "$ref": "#/definitions/PaymentResponse"
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
+    "/veem/v1.0/payments/{paymentId}/cancel": {
+      "post": {
+        "tags": [
+          "payment-controller"
+        ],
+        "summary": "cancelPayment",
+        "description": "cancel a payment",
+        "operationId": "rejectPaymentUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "paymentId",
+            "in": "path",
+            "description": "paymentId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, a cancelled payment object is returned",
+            "schema": {
+              "$ref": "#/definitions/PaymentResponse"
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "type": "oauth2",
+      "authorizationUrl": "qa-admin.veem.com/oauth/authorize",
+      "tokenUrl": "qa-admin.veem.com/oauth/token",
+      "flow": "accessCode",
+      "scopes": {
+        "all": "all"
       }
     }
   },
@@ -1109,6 +1317,571 @@
             "Business",
             "Personal"
           ]
+        }
+      }
+    },
+    "ContactResponse": {
+      "type": "object"
+    },
+    "FileAttachment": {
+      "type": "object",
+      "required": [
+        "name",
+        "referenceId",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the file (including the extension)"
+        },
+        "referenceId": {
+          "type": "string",
+          "description": "The file reference id received from Veem after file upload is complete"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the file",
+          "enum": [
+            "ExternalInvoice",
+            "ProofOfPayment"
+          ]
+        }
+      }
+    },
+    "ExchangeRateResponse": {
+      "type": "object",
+      "required": [
+        "expiry",
+        "fromCurrency",
+        "id",
+        "rate",
+        "timeCreated",
+        "toAmount",
+        "toCurrency"
+      ],
+      "properties": {
+        "expiry": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The expiry time of the current rate quote"
+        },
+        "fromAmount": {
+          "type": "number",
+          "format": "double",
+          "description": "The source amount, either from or to amount is allowed, the other one is calculated"
+        },
+        "fromCurrency": {
+          "type": "string",
+          "description": "The source currency",
+          "enum": [
+            "UNDEFINED",
+            "AED",
+            "AFN",
+            "ALL",
+            "AMD",
+            "ANG",
+            "AOA",
+            "ARS",
+            "AUD",
+            "AWG",
+            "AZN",
+            "BAM",
+            "BBD",
+            "BDT",
+            "BGN",
+            "BHD",
+            "BIF",
+            "BMD",
+            "BND",
+            "BOB",
+            "BOV",
+            "BRL",
+            "BSD",
+            "BTN",
+            "BWP",
+            "BYN",
+            "BYR",
+            "BZD",
+            "CAD",
+            "CDF",
+            "CHE",
+            "CHF",
+            "CHW",
+            "CLF",
+            "CLP",
+            "CNY",
+            "COP",
+            "COU",
+            "CRC",
+            "CUC",
+            "CUP",
+            "CVE",
+            "CZK",
+            "DJF",
+            "DKK",
+            "DOP",
+            "DZD",
+            "EGP",
+            "ERN",
+            "ETB",
+            "EUR",
+            "FJD",
+            "FKP",
+            "GBP",
+            "GEL",
+            "GHS",
+            "GIP",
+            "GMD",
+            "GNF",
+            "GTQ",
+            "GYD",
+            "HKD",
+            "HNL",
+            "HRK",
+            "HTG",
+            "HUF",
+            "IDR",
+            "ILS",
+            "INR",
+            "IQD",
+            "IRR",
+            "ISK",
+            "JMD",
+            "JOD",
+            "JPY",
+            "KES",
+            "KGS",
+            "KHR",
+            "KMF",
+            "KPW",
+            "KRW",
+            "KWD",
+            "KYD",
+            "KZT",
+            "LAK",
+            "LBP",
+            "LKR",
+            "LRD",
+            "LSL",
+            "LTL",
+            "LYD",
+            "MAD",
+            "MDL",
+            "MGA",
+            "MKD",
+            "MMK",
+            "MNT",
+            "MOP",
+            "MRO",
+            "MUR",
+            "MVR",
+            "MWK",
+            "MXN",
+            "MXV",
+            "MYR",
+            "MZN",
+            "NAD",
+            "NGN",
+            "NIO",
+            "NOK",
+            "NPR",
+            "NZD",
+            "OMR",
+            "PAB",
+            "PEN",
+            "PGK",
+            "PHP",
+            "PKR",
+            "PLN",
+            "PYG",
+            "QAR",
+            "RON",
+            "RSD",
+            "RUB",
+            "RUR",
+            "RWF",
+            "SAR",
+            "SBD",
+            "SCR",
+            "SDG",
+            "SEK",
+            "SGD",
+            "SHP",
+            "SLL",
+            "SOS",
+            "SRD",
+            "SSP",
+            "STD",
+            "SVC",
+            "SYP",
+            "SZL",
+            "THB",
+            "TJS",
+            "TMT",
+            "TND",
+            "TOP",
+            "TRY",
+            "TTD",
+            "TWD",
+            "TZS",
+            "UAH",
+            "UGX",
+            "USD",
+            "USN",
+            "USS",
+            "UYI",
+            "UYU",
+            "UZS",
+            "VEF",
+            "VND",
+            "VUV",
+            "WST",
+            "XAF",
+            "XAG",
+            "XAU",
+            "XBA",
+            "XBB",
+            "XBC",
+            "XBD",
+            "XCD",
+            "XDR",
+            "XOF",
+            "XPD",
+            "XPF",
+            "XPT",
+            "XSU",
+            "XTS",
+            "XUA",
+            "XXX",
+            "YER",
+            "ZAR",
+            "ZMW",
+            "ZWL"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "description": "The quote id"
+        },
+        "rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The Veem exchange rate for current transfer"
+        },
+        "timeCreated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The quote generation time"
+        },
+        "toAmount": {
+          "type": "number",
+          "format": "double",
+          "description": "The target amount, either from or to amount is allowed, the other one is calculated"
+        },
+        "toCurrency": {
+          "type": "string",
+          "description": "The target currency",
+          "enum": [
+            "UNDEFINED",
+            "AED",
+            "AFN",
+            "ALL",
+            "AMD",
+            "ANG",
+            "AOA",
+            "ARS",
+            "AUD",
+            "AWG",
+            "AZN",
+            "BAM",
+            "BBD",
+            "BDT",
+            "BGN",
+            "BHD",
+            "BIF",
+            "BMD",
+            "BND",
+            "BOB",
+            "BOV",
+            "BRL",
+            "BSD",
+            "BTN",
+            "BWP",
+            "BYN",
+            "BYR",
+            "BZD",
+            "CAD",
+            "CDF",
+            "CHE",
+            "CHF",
+            "CHW",
+            "CLF",
+            "CLP",
+            "CNY",
+            "COP",
+            "COU",
+            "CRC",
+            "CUC",
+            "CUP",
+            "CVE",
+            "CZK",
+            "DJF",
+            "DKK",
+            "DOP",
+            "DZD",
+            "EGP",
+            "ERN",
+            "ETB",
+            "EUR",
+            "FJD",
+            "FKP",
+            "GBP",
+            "GEL",
+            "GHS",
+            "GIP",
+            "GMD",
+            "GNF",
+            "GTQ",
+            "GYD",
+            "HKD",
+            "HNL",
+            "HRK",
+            "HTG",
+            "HUF",
+            "IDR",
+            "ILS",
+            "INR",
+            "IQD",
+            "IRR",
+            "ISK",
+            "JMD",
+            "JOD",
+            "JPY",
+            "KES",
+            "KGS",
+            "KHR",
+            "KMF",
+            "KPW",
+            "KRW",
+            "KWD",
+            "KYD",
+            "KZT",
+            "LAK",
+            "LBP",
+            "LKR",
+            "LRD",
+            "LSL",
+            "LTL",
+            "LYD",
+            "MAD",
+            "MDL",
+            "MGA",
+            "MKD",
+            "MMK",
+            "MNT",
+            "MOP",
+            "MRO",
+            "MUR",
+            "MVR",
+            "MWK",
+            "MXN",
+            "MXV",
+            "MYR",
+            "MZN",
+            "NAD",
+            "NGN",
+            "NIO",
+            "NOK",
+            "NPR",
+            "NZD",
+            "OMR",
+            "PAB",
+            "PEN",
+            "PGK",
+            "PHP",
+            "PKR",
+            "PLN",
+            "PYG",
+            "QAR",
+            "RON",
+            "RSD",
+            "RUB",
+            "RUR",
+            "RWF",
+            "SAR",
+            "SBD",
+            "SCR",
+            "SDG",
+            "SEK",
+            "SGD",
+            "SHP",
+            "SLL",
+            "SOS",
+            "SRD",
+            "SSP",
+            "STD",
+            "SVC",
+            "SYP",
+            "SZL",
+            "THB",
+            "TJS",
+            "TMT",
+            "TND",
+            "TOP",
+            "TRY",
+            "TTD",
+            "TWD",
+            "TZS",
+            "UAH",
+            "UGX",
+            "USD",
+            "USN",
+            "USS",
+            "UYI",
+            "UYU",
+            "UZS",
+            "VEF",
+            "VND",
+            "VUV",
+            "WST",
+            "XAF",
+            "XAG",
+            "XAU",
+            "XBA",
+            "XBB",
+            "XBC",
+            "XBD",
+            "XCD",
+            "XDR",
+            "XOF",
+            "XPD",
+            "XPF",
+            "XPT",
+            "XSU",
+            "XTS",
+            "XUA",
+            "XXX",
+            "YER",
+            "ZAR",
+            "ZMW",
+            "ZWL"
+          ]
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "required": [
+        "code",
+        "error",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The error code, different than HTTP status codes"
+        },
+        "error": {
+          "type": "string",
+          "description": "The short message"
+        },
+        "message": {
+          "type": "string",
+          "description": "The detailed, developer friendly message"
+        }
+      }
+    },
+    "PaymentResponse": {
+      "type": "object",
+      "required": [
+        "amount",
+        "exchangeRate",
+        "exchangeRateQuoteId",
+        "id",
+        "payee",
+        "status",
+        "timeCreated"
+      ],
+      "properties": {
+        "amount": {
+          "description": "The amount and currency of the payment",
+          "$ref": "#/definitions/AlignMonetaryAmount"
+        },
+        "attachments": {
+          "type": "array",
+          "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
+          "items": {
+            "$ref": "#/definitions/FileAttachment"
+          }
+        },
+        "ccEmails": {
+          "type": "array",
+          "description": "The list of emails who will be notified about the payment",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exchangeRate": {
+          "description": "The exchange rate used associated with the payment",
+          "$ref": "#/definitions/ExchangeRateResponse"
+        },
+        "exchangeRateQuoteId": {
+          "type": "string",
+          "description": "The quote id that was received earlier for the payment"
+        },
+        "externalInvoiceRefId": {
+          "type": "string",
+          "description": "The external invoice if for which payment is made, viewable by receiver"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The payment id"
+        },
+        "notes": {
+          "type": "string",
+          "description": "The memo/note associated with payment, viewable by receiver"
+        },
+        "payee": {
+          "description": "The receiver of the payment",
+          "$ref": "#/definitions/SimpleAccount"
+        },
+        "payeeAmount": {
+          "description": "The receiving amount and currency of the payment. Deprecated please use amount instead",
+          "$ref": "#/definitions/AlignMonetaryAmount"
+        },
+        "purposeOfPayment": {
+          "type": "string",
+          "description": "The purpose of payment required by banks for certain countries, applicable for following countries.SG,AE,KR,BR,CN,HK,HR,IS,ID,IN,IL,KE,PK,SA,ZA,TW,UA,VN",
+          "enum": [
+            "Goods",
+            "Services",
+            "Charitable",
+            "Other"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the payment",
+          "enum": [
+            "Drafted",
+            "Sent",
+            "Claimed",
+            "PendingAuth",
+            "Authorized",
+            "InProgress",
+            "Complete",
+            "Cancelled",
+            "Closed",
+            "Reversed"
+          ]
+        },
+        "timeCreated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The creation time of the payment. The format would be UTC, ISO-8601"
         }
       }
     },
@@ -1779,17 +2552,18 @@
         }
       }
     },
-    "ContactResponse": {
-      "type": "object"
-    },
     "PaymentRequest": {
       "type": "object",
       "required": [
+        "amount",
         "exchangeRateQuoteId",
-        "payee",
-        "payeeAmount"
+        "payee"
       ],
       "properties": {
+        "amount": {
+          "description": "The amount and currency of the payment",
+          "$ref": "#/definitions/AlignMonetaryAmount"
+        },
         "attachments": {
           "type": "array",
           "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
@@ -1821,7 +2595,7 @@
           "$ref": "#/definitions/SimpleAccount"
         },
         "payeeAmount": {
-          "description": "The receiving amount and currency of the payment",
+          "description": "The receiving amount and currency of the payment. Deprecated please use amount instead",
           "$ref": "#/definitions/AlignMonetaryAmount"
         },
         "purposeOfPayment": {
@@ -1832,32 +2606,6 @@
             "Services",
             "Charitable",
             "Other"
-          ]
-        }
-      }
-    },
-    "FileAttachment": {
-      "type": "object",
-      "required": [
-        "name",
-        "referenceId",
-        "type"
-      ],
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "The name of the file (including the extension)"
-        },
-        "referenceId": {
-          "type": "string",
-          "description": "The file reference id received from Veem after file upload is complete"
-        },
-        "type": {
-          "type": "string",
-          "description": "The type of the file",
-          "enum": [
-            "ExternalInvoice",
-            "ProofOfPayment"
           ]
         }
       }
@@ -2538,6 +3286,46 @@
         }
       }
     },
+    "Page«PaymentResponse»": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PaymentResponse"
+          }
+        },
+        "first": {
+          "type": "boolean"
+        },
+        "last": {
+          "type": "boolean"
+        },
+        "number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "numberOfElements": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "totalElements": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "AlignMonetaryAmount": {
       "type": "object",
       "properties": {
@@ -2735,537 +3523,8 @@
         }
       }
     },
-    "ExchangeRateResponse": {
-      "type": "object",
-      "required": [
-        "expiry",
-        "fromCurrency",
-        "id",
-        "rate",
-        "timeCreated",
-        "toAmount",
-        "toCurrency"
-      ],
-      "properties": {
-        "expiry": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The expiry time of the current rate quote"
-        },
-        "fromAmount": {
-          "type": "number",
-          "format": "double",
-          "description": "The source amount, either from or to amount is allowed, the other one is calculated"
-        },
-        "fromCurrency": {
-          "type": "string",
-          "description": "The source currency",
-          "enum": [
-            "UNDEFINED",
-            "AED",
-            "AFN",
-            "ALL",
-            "AMD",
-            "ANG",
-            "AOA",
-            "ARS",
-            "AUD",
-            "AWG",
-            "AZN",
-            "BAM",
-            "BBD",
-            "BDT",
-            "BGN",
-            "BHD",
-            "BIF",
-            "BMD",
-            "BND",
-            "BOB",
-            "BOV",
-            "BRL",
-            "BSD",
-            "BTN",
-            "BWP",
-            "BYN",
-            "BYR",
-            "BZD",
-            "CAD",
-            "CDF",
-            "CHE",
-            "CHF",
-            "CHW",
-            "CLF",
-            "CLP",
-            "CNY",
-            "COP",
-            "COU",
-            "CRC",
-            "CUC",
-            "CUP",
-            "CVE",
-            "CZK",
-            "DJF",
-            "DKK",
-            "DOP",
-            "DZD",
-            "EGP",
-            "ERN",
-            "ETB",
-            "EUR",
-            "FJD",
-            "FKP",
-            "GBP",
-            "GEL",
-            "GHS",
-            "GIP",
-            "GMD",
-            "GNF",
-            "GTQ",
-            "GYD",
-            "HKD",
-            "HNL",
-            "HRK",
-            "HTG",
-            "HUF",
-            "IDR",
-            "ILS",
-            "INR",
-            "IQD",
-            "IRR",
-            "ISK",
-            "JMD",
-            "JOD",
-            "JPY",
-            "KES",
-            "KGS",
-            "KHR",
-            "KMF",
-            "KPW",
-            "KRW",
-            "KWD",
-            "KYD",
-            "KZT",
-            "LAK",
-            "LBP",
-            "LKR",
-            "LRD",
-            "LSL",
-            "LTL",
-            "LYD",
-            "MAD",
-            "MDL",
-            "MGA",
-            "MKD",
-            "MMK",
-            "MNT",
-            "MOP",
-            "MRO",
-            "MUR",
-            "MVR",
-            "MWK",
-            "MXN",
-            "MXV",
-            "MYR",
-            "MZN",
-            "NAD",
-            "NGN",
-            "NIO",
-            "NOK",
-            "NPR",
-            "NZD",
-            "OMR",
-            "PAB",
-            "PEN",
-            "PGK",
-            "PHP",
-            "PKR",
-            "PLN",
-            "PYG",
-            "QAR",
-            "RON",
-            "RSD",
-            "RUB",
-            "RUR",
-            "RWF",
-            "SAR",
-            "SBD",
-            "SCR",
-            "SDG",
-            "SEK",
-            "SGD",
-            "SHP",
-            "SLL",
-            "SOS",
-            "SRD",
-            "SSP",
-            "STD",
-            "SVC",
-            "SYP",
-            "SZL",
-            "THB",
-            "TJS",
-            "TMT",
-            "TND",
-            "TOP",
-            "TRY",
-            "TTD",
-            "TWD",
-            "TZS",
-            "UAH",
-            "UGX",
-            "USD",
-            "USN",
-            "USS",
-            "UYI",
-            "UYU",
-            "UZS",
-            "VEF",
-            "VND",
-            "VUV",
-            "WST",
-            "XAF",
-            "XAG",
-            "XAU",
-            "XBA",
-            "XBB",
-            "XBC",
-            "XBD",
-            "XCD",
-            "XDR",
-            "XOF",
-            "XPD",
-            "XPF",
-            "XPT",
-            "XSU",
-            "XTS",
-            "XUA",
-            "XXX",
-            "YER",
-            "ZAR",
-            "ZMW",
-            "ZWL"
-          ]
-        },
-        "id": {
-          "type": "string",
-          "description": "The quote id"
-        },
-        "rate": {
-          "type": "number",
-          "format": "double",
-          "description": "The Veem exchange rate for current transfer"
-        },
-        "timeCreated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The quote generation time"
-        },
-        "toAmount": {
-          "type": "number",
-          "format": "double",
-          "description": "The target amount, either from or to amount is allowed, the other one is calculated"
-        },
-        "toCurrency": {
-          "type": "string",
-          "description": "The target currency",
-          "enum": [
-            "UNDEFINED",
-            "AED",
-            "AFN",
-            "ALL",
-            "AMD",
-            "ANG",
-            "AOA",
-            "ARS",
-            "AUD",
-            "AWG",
-            "AZN",
-            "BAM",
-            "BBD",
-            "BDT",
-            "BGN",
-            "BHD",
-            "BIF",
-            "BMD",
-            "BND",
-            "BOB",
-            "BOV",
-            "BRL",
-            "BSD",
-            "BTN",
-            "BWP",
-            "BYN",
-            "BYR",
-            "BZD",
-            "CAD",
-            "CDF",
-            "CHE",
-            "CHF",
-            "CHW",
-            "CLF",
-            "CLP",
-            "CNY",
-            "COP",
-            "COU",
-            "CRC",
-            "CUC",
-            "CUP",
-            "CVE",
-            "CZK",
-            "DJF",
-            "DKK",
-            "DOP",
-            "DZD",
-            "EGP",
-            "ERN",
-            "ETB",
-            "EUR",
-            "FJD",
-            "FKP",
-            "GBP",
-            "GEL",
-            "GHS",
-            "GIP",
-            "GMD",
-            "GNF",
-            "GTQ",
-            "GYD",
-            "HKD",
-            "HNL",
-            "HRK",
-            "HTG",
-            "HUF",
-            "IDR",
-            "ILS",
-            "INR",
-            "IQD",
-            "IRR",
-            "ISK",
-            "JMD",
-            "JOD",
-            "JPY",
-            "KES",
-            "KGS",
-            "KHR",
-            "KMF",
-            "KPW",
-            "KRW",
-            "KWD",
-            "KYD",
-            "KZT",
-            "LAK",
-            "LBP",
-            "LKR",
-            "LRD",
-            "LSL",
-            "LTL",
-            "LYD",
-            "MAD",
-            "MDL",
-            "MGA",
-            "MKD",
-            "MMK",
-            "MNT",
-            "MOP",
-            "MRO",
-            "MUR",
-            "MVR",
-            "MWK",
-            "MXN",
-            "MXV",
-            "MYR",
-            "MZN",
-            "NAD",
-            "NGN",
-            "NIO",
-            "NOK",
-            "NPR",
-            "NZD",
-            "OMR",
-            "PAB",
-            "PEN",
-            "PGK",
-            "PHP",
-            "PKR",
-            "PLN",
-            "PYG",
-            "QAR",
-            "RON",
-            "RSD",
-            "RUB",
-            "RUR",
-            "RWF",
-            "SAR",
-            "SBD",
-            "SCR",
-            "SDG",
-            "SEK",
-            "SGD",
-            "SHP",
-            "SLL",
-            "SOS",
-            "SRD",
-            "SSP",
-            "STD",
-            "SVC",
-            "SYP",
-            "SZL",
-            "THB",
-            "TJS",
-            "TMT",
-            "TND",
-            "TOP",
-            "TRY",
-            "TTD",
-            "TWD",
-            "TZS",
-            "UAH",
-            "UGX",
-            "USD",
-            "USN",
-            "USS",
-            "UYI",
-            "UYU",
-            "UZS",
-            "VEF",
-            "VND",
-            "VUV",
-            "WST",
-            "XAF",
-            "XAG",
-            "XAU",
-            "XBA",
-            "XBB",
-            "XBC",
-            "XBD",
-            "XCD",
-            "XDR",
-            "XOF",
-            "XPD",
-            "XPF",
-            "XPT",
-            "XSU",
-            "XTS",
-            "XUA",
-            "XXX",
-            "YER",
-            "ZAR",
-            "ZMW",
-            "ZWL"
-          ]
-        }
-      }
-    },
-    "ErrorResponse": {
-      "type": "object",
-      "required": [
-        "code",
-        "error",
-        "message"
-      ],
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The error code, different than HTTP status codes"
-        },
-        "error": {
-          "type": "string",
-          "description": "The short message"
-        },
-        "message": {
-          "type": "string",
-          "description": "The detailed, developer friendly message"
-        }
-      }
-    },
-    "PaymentResponse": {
-      "type": "object",
-      "required": [
-        "exchangeRate",
-        "exchangeRateQuoteId",
-        "id",
-        "payee",
-        "payeeAmount",
-        "status",
-        "timeCreated"
-      ],
-      "properties": {
-        "attachments": {
-          "type": "array",
-          "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
-          "items": {
-            "$ref": "#/definitions/FileAttachment"
-          }
-        },
-        "ccEmails": {
-          "type": "array",
-          "description": "The list of emails who will be notified about the payment",
-          "items": {
-            "type": "string"
-          }
-        },
-        "exchangeRate": {
-          "description": "The exchange rate used associated with the payment",
-          "$ref": "#/definitions/ExchangeRateResponse"
-        },
-        "exchangeRateQuoteId": {
-          "type": "string",
-          "description": "The quote id that was received earlier for the payment"
-        },
-        "externalInvoiceRefId": {
-          "type": "string",
-          "description": "The external invoice if for which payment is made, viewable by receiver"
-        },
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "The payment id"
-        },
-        "notes": {
-          "type": "string",
-          "description": "The memo/note associated with payment, viewable by receiver"
-        },
-        "payee": {
-          "description": "The receiver of the payment",
-          "$ref": "#/definitions/SimpleAccount"
-        },
-        "payeeAmount": {
-          "description": "The receiving amount and currency of the payment",
-          "$ref": "#/definitions/AlignMonetaryAmount"
-        },
-        "purposeOfPayment": {
-          "type": "string",
-          "description": "The purpose of payment required by banks for certain countries, applicable for following countries.SG,AE,KR,BR,CN,HK,HR,IS,ID,IN,IL,KE,PK,SA,ZA,TW,UA,VN",
-          "enum": [
-            "Goods",
-            "Services",
-            "Charitable",
-            "Other"
-          ]
-        },
-        "status": {
-          "type": "string",
-          "description": "The status of the payment",
-          "enum": [
-            "Drafted",
-            "Sent",
-            "Claimed",
-            "PendingAuth",
-            "Authorized",
-            "InProgress",
-            "Complete",
-            "Cancelled",
-            "Closed",
-            "Reversed"
-          ]
-        },
-        "timeCreated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The creation time of the payment. The format would be UTC, ISO-8601"
-        }
-      }
+    "Sort": {
+      "type": "object"
     }
   }
 }
