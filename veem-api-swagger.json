@@ -54,6 +54,8 @@
   "paths": {
     "/veem/public/v1.0/country-currency-map": {
       "get": {
+        "security": [
+        ],
         "tags": [
           "meta-controller"
         ],
