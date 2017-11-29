@@ -659,17 +659,6 @@
       }
     }
   },
-  "securityDefinitions": {
-    "oauth2": {
-      "type": "oauth2",
-      "authorizationUrl": "qa-admin.veem.com/oauth/authorize",
-      "tokenUrl": "qa-admin.veem.com/oauth/token",
-      "flow": "accessCode",
-      "scopes": {
-        "all": "all"
-      }
-    }
-  },
   "definitions": {
     "SimpleAccount": {
       "type": "object",
