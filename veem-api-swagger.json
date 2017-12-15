@@ -15,14 +15,14 @@
       "url": "License URL"
     }
   },
-  "host": "qa-admin.veem.com",
+  "host": "sandbox-admin.veem.com",
   "basePath": "/",
   "schemes": ["http", "https"],
   "securityDefinitions": {
     "oauth": {
       "type": "oauth2",
-      "authorizationUrl": "http://qa-admin.veem.com/oauth/authorize",
-      "tokenUrl": "http://qa-admin.veem.com/oauth/token",
+      "authorizationUrl": "http://sandbox-admin.veem.com/oauth/authorize",
+      "tokenUrl": "http://sandbox-admin.veem.com/oauth/token",
       "flow": "accessCode"
     }
   },
@@ -49,6 +49,10 @@
     {
       "name": "account-controller",
       "description": "account management apis"
+    },
+    {
+      "name": "invoice-controller",
+      "description": "invoice creation and management apis"
     }
   ],
   "paths": {
@@ -350,6 +354,221 @@
         }
       }
     },
+    "/veem/v1.0/invoices": {
+      "post": {
+        "tags": [
+          "invoice-controller"
+        ],
+        "summary": "createInvoice",
+        "description": "posts an invoice and sends to receiver",
+        "operationId": "createInvoiceUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "description": "request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/InvoiceRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, an invoice is created in Veem",
+            "schema": {
+              "$ref": "#/definitions/InvoiceResponse"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/InvoiceResponse"
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
+    "/veem/v1.0/invoices/{invoiceId}": {
+      "get": {
+        "tags": [
+          "invoice-controller"
+        ],
+        "summary": "getInvoice",
+        "description": "get invoice details",
+        "operationId": "getInvoiceUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "invoiceId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, an invoice object is returned",
+            "schema": {
+              "$ref": "#/definitions/InvoiceResponse"
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
+    "/veem/v1.0/invoices/{invoiceId}/approve": {
+      "post": {
+        "tags": [
+          "invoice-controller"
+        ],
+        "summary": "approveInvoice",
+        "description": "approve an invoice",
+        "operationId": "approveInvoiceUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "invoiceId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, an approved invoice object is returned",
+            "schema": {
+              "$ref": "#/definitions/InvoiceResponse"
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
+    "/veem/v1.0/invoices/{invoiceId}/cancel": {
+      "post": {
+        "tags": [
+          "invoice-controller"
+        ],
+        "summary": "cancelInvoice",
+        "description": "cancel an invoice",
+        "operationId": "cancelInvoiceUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "invoiceId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, a cancelled invoice object is returned",
+            "schema": {
+              "$ref": "#/definitions/InvoiceResponse"
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
     "/veem/v1.0/payments": {
       "get": {
         "tags": [
@@ -608,6 +827,56 @@
         }
       }
     },
+    "/veem/v1.0/payments/{paymentId}/attachments/{attachmentId}/download": {
+      "get": {
+        "tags": [
+          "payment-controller"
+        ],
+        "summary": "Downloads the file attachment with the payment",
+        "operationId": "downloadAttachmentUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "paymentId",
+            "in": "path",
+            "description": "paymentId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "attachmentId",
+            "in": "query",
+            "description": "attachmentId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "byte"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format of fileReferenceId; Unable to find file.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
     "/veem/v1.0/payments/{paymentId}/cancel": {
       "post": {
         "tags": [
@@ -662,6 +931,91 @@
     }
   },
   "definitions": {
+    "InvoiceResponse": {
+      "type": "object",
+      "required": [
+        "amount",
+        "exchangeRate",
+        "exchangeRateQuoteId",
+        "id",
+        "payer",
+        "status",
+        "timeCreated"
+      ],
+      "properties": {
+        "amount": {
+          "description": "The amount and currency of the payment",
+          "$ref": "#/definitions/AlignMonetaryAmount"
+        },
+        "attachments": {
+          "type": "array",
+          "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
+          "items": {
+            "$ref": "#/definitions/FileAttachment"
+          }
+        },
+        "ccEmails": {
+          "type": "array",
+          "description": "The list of emails who will be notified about the payment",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exchangeRate": {
+          "description": "The exchange rate used associated with the invoice",
+          "$ref": "#/definitions/ExchangeRateResponse"
+        },
+        "exchangeRateQuoteId": {
+          "type": "string",
+          "description": "The quote id that was received earlier for the payment"
+        },
+        "externalInvoiceRefId": {
+          "type": "string",
+          "description": "The external invoice if for which payment is made, viewable by receiver"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The invoice id"
+        },
+        "notes": {
+          "type": "string",
+          "description": "The memo/note associated with payment, viewable by receiver"
+        },
+        "payer": {
+          "description": "The sender of the payment",
+          "$ref": "#/definitions/SimpleAccount"
+        },
+        "purposeOfPayment": {
+          "type": "string",
+          "description": "The purpose of payment required by banks for certain countries, applicable for following countries.SG,AE,KR,BR,CN,HK,HR,IS,ID,IN,IL,KE,PK,SA,ZA,TW,UA,VN",
+          "enum": [
+            "Goods",
+            "Services",
+            "Charitable",
+            "Other"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the invoice",
+          "enum": [
+            "Drafted",
+            "Sent",
+            "Cancelled",
+            "Closed",
+            "Claimed",
+            "MarkAsPaid",
+            "Rejected"
+          ]
+        },
+        "timeCreated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The creation time of the invoice. The format would be UTC, ISO-8601"
+        }
+      }
+    },
     "SimpleAccount": {
       "type": "object",
       "required": [
@@ -669,7 +1023,6 @@
         "email",
         "firstName",
         "lastName",
-        "phoneNumber",
         "type"
       ],
       "properties": {
@@ -964,10 +1317,6 @@
           "type": "string",
           "description": "The last name of the receiver"
         },
-        "phoneNumber": {
-          "type": "string",
-          "description": "The free form phone number"
-        },
         "type": {
           "type": "string",
           "description": "The type of the receiver",
@@ -986,7 +1335,6 @@
         "email",
         "firstName",
         "lastName",
-        "phoneNumber",
         "type"
       ],
       "properties": {
@@ -1296,10 +1644,6 @@
             ]
           }
         },
-        "phoneNumber": {
-          "type": "string",
-          "description": "The free form phone number"
-        },
         "type": {
           "type": "string",
           "description": "The type of the receiver",
@@ -1336,6 +1680,63 @@
           "enum": [
             "ExternalInvoice",
             "ProofOfPayment"
+          ]
+        }
+      }
+    },
+    "InvoiceRequest": {
+      "type": "object",
+      "required": [
+        "amount",
+        "exchangeRateQuoteId",
+        "payer"
+      ],
+      "properties": {
+        "amount": {
+          "description": "The amount and currency of the payment",
+          "$ref": "#/definitions/AlignMonetaryAmount"
+        },
+        "attachments": {
+          "type": "array",
+          "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
+          "items": {
+            "$ref": "#/definitions/FileAttachment"
+          }
+        },
+        "ccEmails": {
+          "type": "array",
+          "description": "The list of emails who will be notified about the payment",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exchangeRate": {
+          "$ref": "#/definitions/ExchangeRateResponse"
+        },
+        "exchangeRateQuoteId": {
+          "type": "string",
+          "description": "The quote id that was received earlier for the payment"
+        },
+        "externalInvoiceRefId": {
+          "type": "string",
+          "description": "The external invoice if for which payment is made, viewable by receiver"
+        },
+        "notes": {
+          "type": "string",
+          "description": "The memo/note associated with payment, viewable by receiver"
+        },
+        "payer": {
+          "description": "The sender of the payment",
+          "$ref": "#/definitions/SimpleAccount"
+        },
+        "purposeOfPayment": {
+          "type": "string",
+          "description": "The purpose of payment required by banks for certain countries, applicable for following countries.SG,AE,KR,BR,CN,HK,HR,IS,ID,IN,IL,KE,PK,SA,ZA,TW,UA,VN",
+          "enum": [
+            "Goods",
+            "Services",
+            "Charitable",
+            "Other"
           ]
         }
       }
@@ -2156,6 +2557,9 @@
         "countryName": {
           "type": "string"
         },
+        "invoiceAttachmentRequired": {
+          "type": "boolean"
+        },
         "purposeOfPaymentRequired": {
           "type": "boolean"
         },
@@ -2555,6 +2959,11 @@
           "description": "The amount and currency of the payment",
           "$ref": "#/definitions/AlignMonetaryAmount"
         },
+        "approveAutomatically": {
+          "type": "boolean",
+          "example": false,
+          "description": "Whether to automatically move the payment from drafted"
+        },
         "attachments": {
           "type": "array",
           "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
@@ -2568,6 +2977,9 @@
           "items": {
             "type": "string"
           }
+        },
+        "exchangeRate": {
+          "$ref": "#/definitions/ExchangeRateResponse"
         },
         "exchangeRateQuoteId": {
           "type": "string",
