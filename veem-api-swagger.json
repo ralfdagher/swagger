@@ -827,56 +827,56 @@
         }
       }
     },
-    "/veem/v1.0/payments/{paymentId}/attachments/{attachmentId}/download": {
-      "get": {
-        "tags": [
-          "payment-controller"
-        ],
-        "summary": "Downloads the file attachment with the payment",
-        "operationId": "downloadAttachmentUsingGET",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "paymentId",
-            "in": "path",
-            "description": "paymentId",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "attachmentId",
-            "in": "query",
-            "description": "attachmentId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "byte"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad format of fileReferenceId; Unable to find file.",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
+//    "/veem/v1.0/payments/{paymentId}/attachments/{attachmentId}/download": {
+//      "get": {
+//        "tags": [
+//          "payment-controller"
+//        ],
+//        "summary": "Downloads the file attachment with the payment",
+//        "operationId": "downloadAttachmentUsingGET",
+//        "consumes": [
+//          "application/json"
+//        ],
+//        "produces": [
+//          "*/*"
+//        ],
+//        "parameters": [
+//          {
+//            "name": "paymentId",
+//            "in": "path",
+//            "description": "paymentId",
+//            "required": true,
+//            "type": "integer",
+//            "format": "int64"
+//          },
+//          {
+//            "name": "attachmentId",
+//            "in": "query",
+//            "description": "attachmentId",
+//            "required": true,
+//            "type": "string"
+//          }
+//        ],
+//        "responses": {
+//          "200": {
+//            "description": "OK",
+//            "schema": {
+//              "type": "array",
+//              "items": {
+//                "type": "string",
+//                "format": "byte"
+//              }
+//            }
+//          },
+//          "400": {
+//            "description": "Bad format of fileReferenceId; Unable to find file.",
+//            "schema": {
+//              "$ref": "#/definitions/ErrorResponse"
+//            }
+//          }
+//        }
+//      }
+//    },
     "/veem/v1.0/payments/{paymentId}/cancel": {
       "post": {
         "tags": [
