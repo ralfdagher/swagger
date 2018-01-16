@@ -15,14 +15,14 @@
       "url": "License URL"
     }
   },
-  "host": "sandbox-admin.veem.com",
+  "host": "sandbox-api.veem.com",
   "basePath": "/",
   "schemes": ["http", "https"],
   "securityDefinitions": {
     "oauth": {
       "type": "oauth2",
-      "authorizationUrl": "http://sandbox-admin.veem.com/oauth/authorize",
-      "tokenUrl": "http://sandbox-admin.veem.com/oauth/token",
+      "authorizationUrl": "http://sandbox-api.veem.com/oauth/authorize",
+      "tokenUrl": "http://sandbox-api.veem.com/oauth/token",
       "flow": "accessCode"
     }
   },
