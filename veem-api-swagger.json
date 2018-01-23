@@ -224,7 +224,54 @@
         }
       }
     },
-    "/veem/v1.0/attachments/payment": {
+    "/veem/v1.0/attachments": {
+      "get": {
+        "tags": [
+          "attachment-controller"
+        ],
+        "summary": "Downloads the file attachment",
+        "operationId": "downloadAttachmentUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "referenceId",
+            "in": "query",
+            "description": "referenceId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "byte"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid name and referenceId combination",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "attachment-controller"
@@ -910,6 +957,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "claimLink": {
+          "type": "string",
+          "description": "The link that allows the recipient to perform the payment"
         },
         "exchangeRate": {
           "description": "The exchange rate used associated with the invoice",
@@ -2165,6 +2216,10 @@
             "type": "string"
           }
         },
+        "claimLink": {
+          "type": "string",
+          "description": "The link that allows the recipient to claim the payment"
+        },
         "exchangeRate": {
           "description": "The exchange rate used associated with the payment",
           "$ref": "#/definitions/ExchangeRateResponse"
@@ -2203,6 +2258,10 @@
             "Charitable",
             "Other"
           ]
+        },
+        "pushPaymentInfo": {
+          "description": "Bank account information for push payment (if required)",
+          "$ref": "#/definitions/PushPaymentInfoResponse"
         },
         "status": {
           "type": "string",
@@ -2894,6 +2953,27 @@
               "ZWL"
             ]
           }
+        }
+      }
+    },
+    "PushPaymentInfoResponse": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/AlignMonetaryAmount"
+        },
+        "pushPaymentInfo": {
+          "type": "string",
+          "enum": [
+            "AU",
+            "GB",
+            "MX",
+            "PH",
+            "EU_COMMON"
+          ]
+        },
+        "reference": {
+          "type": "string"
         }
       }
     },
