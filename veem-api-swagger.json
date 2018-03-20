@@ -21,8 +21,8 @@
   "securityDefinitions": {
     "oauth": {
       "type": "oauth2",
-      "authorizationUrl": "http://sandbox-api.veem.com/oauth/authorize",
-      "tokenUrl": "http://sandbox-api.veem.com/oauth/token",
+      "authorizationUrl": "https://sandbox-api.veem.com/oauth/authorize",
+      "tokenUrl": "https://sandbox-api.veem.com/oauth/token",
       "flow": "accessCode"
     }
   },
@@ -229,33 +229,33 @@
         "tags": [
           "attachment-controller"
         ],
-        "summary": "Downloads the file attachment",
+        "summary": "Downloads the referenced file",
         "operationId": "downloadAttachmentUsingGET",
         "consumes": [
           "application/json"
         ],
         "produces": [
-          "*/*"
+          "application/octet-stream"
         ],
         "parameters": [
           {
             "name": "name",
             "in": "query",
-            "description": "name",
-            "required": true,
+            "description": "The file name from the upload response",
+            "required": false,
             "type": "string"
           },
           {
             "name": "referenceId",
             "in": "query",
-            "description": "referenceId",
-            "required": true,
+            "description": "The unique reference ID from the upload response",
+            "required": false,
             "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success, the file content is in the response body.",
             "schema": {
               "type": "array",
               "items": {
@@ -3047,6 +3047,7 @@
       "type": "object",
       "required": [
         "fromCurrency",
+        "toCountry",
         "toCurrency"
       ],
       "properties": {
