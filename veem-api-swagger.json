@@ -35,24 +35,24 @@
       "description": "Attachment Controller"
     },
     {
-      "name": "meta-controller",
-      "description": "Information about the API"
-    },
-    {
-      "name": "payment-controller",
-      "description": "payment creation and management apis"
-    },
-    {
       "name": "exchange-rate-controller",
       "description": "Exchange Rate APIs"
     },
     {
-      "name": "account-controller",
-      "description": "account management apis"
+      "name": "invoice-controller",
+      "description": "Invoice Controller"
     },
     {
-      "name": "invoice-controller",
-      "description": "invoice creation and management apis"
+      "name": "payment-controller",
+      "description": "Payment creation and management APIs"
+    },
+    {
+      "name": "meta-controller",
+      "description": "Information about the APIs"
+    },
+    {
+      "name": "account-controller",
+      "description": "Account management APIs"
     }
   ],
   "paths": {
@@ -362,6 +362,68 @@
         }
       }
     },
+    "/veem/v1.0/exchangerates/quotes/batch": {
+      "post": {
+        "tags": [
+          "exchange-rate-controller"
+        ],
+        "summary": "createMultipleQuotes",
+        "description": "Submits a request to generate multiple exchange rate quotes",
+        "operationId": "generateExchangeQuotesUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "requests",
+            "description": "requests",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ExchangeRateBatchItemRequest"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, all quotes have been have been created in Veem",
+            "schema": {
+              "$ref": "#/definitions/ExchangeRateResponse"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ResponseSummary"
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
     "/veem/v1.0/hello": {
       "get": {
         "tags": [
@@ -621,9 +683,9 @@
         "tags": [
           "payment-controller"
         ],
-        "summary": "getPaymentsByStatus",
-        "description": "get payments for this account, filtered by status",
-        "operationId": "getPaymentsByStatusUsingGET",
+        "summary": "getPayments",
+        "description": "Get payments for this account with filters",
+        "operationId": "getPaymentsUsingGET",
         "consumes": [
           "application/json"
         ],
@@ -631,6 +693,38 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "name": "paymentIds",
+            "in": "query",
+            "description": "paymentIds",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "batchId",
+            "in": "query",
+            "description": "batchId",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "batchItemIds",
+            "in": "query",
+            "description": "batchItemIds",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "collectionFormat": "multi"
+          },
           {
             "name": "status",
             "in": "query",
@@ -644,6 +738,7 @@
                 "Sent",
                 "Claimed",
                 "PendingAuth",
+                "PendingApproval",
                 "Authorized",
                 "InProgress",
                 "Complete",
@@ -658,6 +753,7 @@
               "Sent",
               "Claimed",
               "PendingAuth",
+              "PendingApproval",
               "Authorized",
               "InProgress",
               "Complete",
@@ -766,6 +862,106 @@
           },
           "404": {
             "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
+    "/veem/v1.0/payments/batch": {
+      "post": {
+        "tags": [
+          "payment-controller"
+        ],
+        "summary": "createPayments",
+        "description": "Create multiple payments in a batch",
+        "operationId": "createPaymentsUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "requests",
+            "description": "requests",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PaymentBatchItemRequest"
+              }
+            }
+          },
+          {
+            "name": "includeItems",
+            "in": "query",
+            "description": "includeItems",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request data validated, processing started",
+            "schema": {
+              "$ref": "#/definitions/BatchResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request data, no requests were processed",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/veem/v1.0/payments/batch/{batchId}": {
+      "get": {
+        "tags": [
+          "payment-controller"
+        ],
+        "summary": "getPaymentBatch",
+        "description": "Get the current state of a payment creation batch",
+        "operationId": "getPaymentBatchUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "batchId",
+            "in": "path",
+            "description": "batchId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "includeItems",
+            "in": "query",
+            "description": "includeItems",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request data validated, processing started",
+            "schema": {
+              "$ref": "#/definitions/BatchResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request data, no requests were processed",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -928,404 +1124,36 @@
     }
   },
   "definitions": {
-    "InvoiceResponse": {
+    "BatchResponse«AsyncBatchItemPaymentResponse»": {
       "type": "object",
-      "required": [
-        "amount",
-        "exchangeRate",
-        "exchangeRateQuoteId",
-        "id",
-        "payer",
-        "status",
-        "timeCreated"
-      ],
       "properties": {
-        "amount": {
-          "description": "The amount and currency of the payment",
-          "$ref": "#/definitions/AlignMonetaryAmount"
-        },
-        "attachments": {
-          "type": "array",
-          "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
-          "items": {
-            "$ref": "#/definitions/FileAttachment"
-          }
-        },
-        "ccEmails": {
-          "type": "array",
-          "description": "The list of emails who will be notified about the payment",
-          "items": {
-            "type": "string"
-          }
-        },
-        "claimLink": {
-          "type": "string",
-          "description": "The link that allows the recipient to perform the payment"
-        },
-        "exchangeRate": {
-          "description": "The exchange rate used associated with the invoice",
-          "$ref": "#/definitions/ExchangeRateResponse"
-        },
-        "exchangeRateQuoteId": {
-          "type": "string",
-          "description": "The quote id that was received earlier for the payment"
-        },
-        "externalInvoiceRefId": {
-          "type": "string",
-          "description": "The external invoice if for which payment is made, viewable by receiver"
-        },
-        "id": {
+        "batchId": {
           "type": "integer",
-          "format": "int64",
-          "description": "The invoice id"
+          "format": "int64"
         },
-        "notes": {
-          "type": "string",
-          "description": "The memo/note associated with payment, viewable by receiver"
+        "batchItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AsyncBatchItemPaymentResponse"
+          }
         },
-        "payer": {
-          "description": "The sender of the payment",
-          "$ref": "#/definitions/SimpleAccount"
+        "hasErrors": {
+          "type": "boolean"
         },
-        "purposeOfPayment": {
-          "type": "string",
-          "description": "The purpose of payment required by banks for certain countries, applicable for following countries.SG,AE,KR,BR,CN,HK,HR,IS,ID,IN,IL,KE,PK,SA,ZA,TW,UA,VN",
-          "enum": [
-            "Goods",
-            "Services",
-            "Charitable",
-            "Other"
-          ]
+        "processedItems": {
+          "type": "integer",
+          "format": "int64"
         },
         "status": {
           "type": "string",
-          "description": "The status of the invoice",
           "enum": [
-            "Drafted",
-            "Sent",
-            "Cancelled",
-            "Closed",
-            "Claimed",
-            "MarkAsPaid",
-            "Rejected"
+            "IN_PROGRESS",
+            "COMPLETED"
           ]
         },
-        "timeCreated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The creation time of the invoice. The format would be UTC, ISO-8601"
-        }
-      }
-    },
-    "SimpleAccount": {
-      "type": "object",
-      "required": [
-        "countryCode",
-        "email",
-        "firstName",
-        "lastName",
-        "type"
-      ],
-      "properties": {
-        "businessName": {
-          "type": "string",
-          "description": "The name of the receiver's business, required when account type is business"
-        },
-        "countryCode": {
-          "type": "string",
-          "description": "The 2 letter ISO country codes,ISO Alpha-2",
-          "enum": [
-            "UNDEFINED",
-            "AC",
-            "AD",
-            "AE",
-            "AF",
-            "AG",
-            "AI",
-            "AL",
-            "AM",
-            "AN",
-            "AO",
-            "AQ",
-            "AR",
-            "AS",
-            "AT",
-            "AU",
-            "AW",
-            "AX",
-            "AZ",
-            "BA",
-            "BB",
-            "BD",
-            "BE",
-            "BF",
-            "BG",
-            "BH",
-            "BI",
-            "BJ",
-            "BL",
-            "BM",
-            "BN",
-            "BO",
-            "BQ",
-            "BR",
-            "BS",
-            "BT",
-            "BU",
-            "BV",
-            "BW",
-            "BY",
-            "BZ",
-            "CA",
-            "CC",
-            "CD",
-            "CF",
-            "CG",
-            "CH",
-            "CI",
-            "CK",
-            "CL",
-            "CM",
-            "CN",
-            "CO",
-            "CP",
-            "CR",
-            "CS",
-            "CU",
-            "CV",
-            "CW",
-            "CX",
-            "CY",
-            "CZ",
-            "DE",
-            "DG",
-            "DJ",
-            "DK",
-            "DM",
-            "DO",
-            "DZ",
-            "EA",
-            "EC",
-            "EE",
-            "EG",
-            "EH",
-            "ER",
-            "ES",
-            "ET",
-            "EU",
-            "FI",
-            "FJ",
-            "FK",
-            "FM",
-            "FO",
-            "FR",
-            "FX",
-            "GA",
-            "GB",
-            "GD",
-            "GE",
-            "GF",
-            "GG",
-            "GH",
-            "GI",
-            "GL",
-            "GM",
-            "GN",
-            "GP",
-            "GQ",
-            "GR",
-            "GS",
-            "GT",
-            "GU",
-            "GW",
-            "GY",
-            "HK",
-            "HM",
-            "HN",
-            "HR",
-            "HT",
-            "HU",
-            "IC",
-            "ID",
-            "IE",
-            "IL",
-            "IM",
-            "IN",
-            "IO",
-            "IQ",
-            "IR",
-            "IS",
-            "IT",
-            "JE",
-            "JM",
-            "JO",
-            "JP",
-            "KE",
-            "KG",
-            "KH",
-            "KI",
-            "KM",
-            "KN",
-            "KP",
-            "KR",
-            "KW",
-            "KY",
-            "KZ",
-            "LA",
-            "LB",
-            "LC",
-            "LI",
-            "LK",
-            "LR",
-            "LS",
-            "LT",
-            "LU",
-            "LV",
-            "LY",
-            "MA",
-            "MC",
-            "MD",
-            "ME",
-            "MF",
-            "MG",
-            "MH",
-            "MK",
-            "ML",
-            "MM",
-            "MN",
-            "MO",
-            "MP",
-            "MQ",
-            "MR",
-            "MS",
-            "MT",
-            "MU",
-            "MV",
-            "MW",
-            "MX",
-            "MY",
-            "MZ",
-            "NA",
-            "NC",
-            "NE",
-            "NF",
-            "NG",
-            "NI",
-            "NL",
-            "NO",
-            "NP",
-            "NR",
-            "NT",
-            "NU",
-            "NZ",
-            "OM",
-            "PA",
-            "PE",
-            "PF",
-            "PG",
-            "PH",
-            "PK",
-            "PL",
-            "PM",
-            "PN",
-            "PR",
-            "PS",
-            "PT",
-            "PW",
-            "PY",
-            "QA",
-            "RE",
-            "RO",
-            "RS",
-            "RU",
-            "RW",
-            "SA",
-            "SB",
-            "SC",
-            "SD",
-            "SE",
-            "SF",
-            "SG",
-            "SH",
-            "SI",
-            "SJ",
-            "SK",
-            "SL",
-            "SM",
-            "SN",
-            "SO",
-            "SR",
-            "SS",
-            "ST",
-            "SU",
-            "SV",
-            "SX",
-            "SY",
-            "SZ",
-            "TA",
-            "TC",
-            "TD",
-            "TF",
-            "TG",
-            "TH",
-            "TJ",
-            "TK",
-            "TL",
-            "TM",
-            "TN",
-            "TO",
-            "TP",
-            "TR",
-            "TT",
-            "TV",
-            "TW",
-            "TZ",
-            "UA",
-            "UG",
-            "UK",
-            "UM",
-            "US",
-            "UY",
-            "UZ",
-            "VA",
-            "VC",
-            "VE",
-            "VG",
-            "VI",
-            "VN",
-            "VU",
-            "WF",
-            "WS",
-            "XK",
-            "YE",
-            "YT",
-            "YU",
-            "ZA",
-            "ZM",
-            "ZR",
-            "ZW"
-          ]
-        },
-        "email": {
-          "type": "string",
-          "description": "The email of the receiver"
-        },
-        "firstName": {
-          "type": "string",
-          "description": "The first name of the receiver"
-        },
-        "lastName": {
-          "type": "string",
-          "description": "The last name of the receiver"
-        },
-        "type": {
-          "type": "string",
-          "description": "The type of the receiver",
-          "enum": [
-            "Incomplete",
-            "Business",
-            "Personal"
-          ]
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -1656,8 +1484,38 @@
         }
       }
     },
-    "ContactResponse": {
-      "type": "object"
+    "BatchResponse": {
+      "type": "object",
+      "properties": {
+        "batchId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "batchItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AsyncBatchItemResponse"
+          }
+        },
+        "hasErrors": {
+          "type": "boolean"
+        },
+        "processedItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "IN_PROGRESS",
+            "COMPLETED"
+          ]
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
     },
     "FileAttachment": {
       "type": "object",
@@ -1682,6 +1540,17 @@
             "ExternalInvoice",
             "ProofOfPayment"
           ]
+        }
+      }
+    },
+    "FailureResponse": {
+      "type": "object",
+      "properties": {
+        "batchItemId": {
+          "type": "string"
+        },
+        "errorCode": {
+          "type": "string"
         }
       }
     },
@@ -1742,27 +1611,21 @@
         }
       }
     },
-    "ExchangeRateResponse": {
+    "ExchangeRateBatchItemRequest": {
       "type": "object",
       "required": [
-        "expiry",
         "fromCurrency",
-        "id",
-        "rate",
-        "timeCreated",
-        "toAmount",
+        "toCountry",
         "toCurrency"
       ],
       "properties": {
-        "expiry": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The expiry time of the current rate quote"
+        "batchItemId": {
+          "type": "string"
         },
         "fromAmount": {
           "type": "number",
           "format": "double",
-          "description": "The source amount, either from or to amount is allowed, the other one is calculated"
+          "description": "The source amount, either `from` or `to` amount is allowed, the other one is calculated"
         },
         "fromCurrency": {
           "type": "string",
@@ -1953,24 +1816,289 @@
             "ZWL"
           ]
         },
-        "id": {
+        "recipientAccountEmail": {
           "type": "string",
-          "description": "The quote id"
-        },
-        "rate": {
-          "type": "number",
-          "format": "double",
-          "description": "The Veem exchange rate for current transfer"
-        },
-        "timeCreated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The quote generation time"
+          "description": "The email of recipient to get discounted rate"
         },
         "toAmount": {
           "type": "number",
           "format": "double",
-          "description": "The target amount, either from or to amount is allowed, the other one is calculated"
+          "description": "The target amount, either `from` or `to` amount is allowed, the other one is calculated"
+        },
+        "toCountry": {
+          "type": "string",
+          "description": "The destination country to ensure Veem can support transfer to",
+          "enum": [
+            "UNDEFINED",
+            "AC",
+            "AD",
+            "AE",
+            "AF",
+            "AG",
+            "AI",
+            "AL",
+            "AM",
+            "AN",
+            "AO",
+            "AQ",
+            "AR",
+            "AS",
+            "AT",
+            "AU",
+            "AW",
+            "AX",
+            "AZ",
+            "BA",
+            "BB",
+            "BD",
+            "BE",
+            "BF",
+            "BG",
+            "BH",
+            "BI",
+            "BJ",
+            "BL",
+            "BM",
+            "BN",
+            "BO",
+            "BQ",
+            "BR",
+            "BS",
+            "BT",
+            "BU",
+            "BV",
+            "BW",
+            "BY",
+            "BZ",
+            "CA",
+            "CC",
+            "CD",
+            "CF",
+            "CG",
+            "CH",
+            "CI",
+            "CK",
+            "CL",
+            "CM",
+            "CN",
+            "CO",
+            "CP",
+            "CR",
+            "CS",
+            "CU",
+            "CV",
+            "CW",
+            "CX",
+            "CY",
+            "CZ",
+            "DE",
+            "DG",
+            "DJ",
+            "DK",
+            "DM",
+            "DO",
+            "DZ",
+            "EA",
+            "EC",
+            "EE",
+            "EG",
+            "EH",
+            "ER",
+            "ES",
+            "ET",
+            "EU",
+            "FI",
+            "FJ",
+            "FK",
+            "FM",
+            "FO",
+            "FR",
+            "FX",
+            "GA",
+            "GB",
+            "GD",
+            "GE",
+            "GF",
+            "GG",
+            "GH",
+            "GI",
+            "GL",
+            "GM",
+            "GN",
+            "GP",
+            "GQ",
+            "GR",
+            "GS",
+            "GT",
+            "GU",
+            "GW",
+            "GY",
+            "HK",
+            "HM",
+            "HN",
+            "HR",
+            "HT",
+            "HU",
+            "IC",
+            "ID",
+            "IE",
+            "IL",
+            "IM",
+            "IN",
+            "IO",
+            "IQ",
+            "IR",
+            "IS",
+            "IT",
+            "JE",
+            "JM",
+            "JO",
+            "JP",
+            "KE",
+            "KG",
+            "KH",
+            "KI",
+            "KM",
+            "KN",
+            "KP",
+            "KR",
+            "KW",
+            "KY",
+            "KZ",
+            "LA",
+            "LB",
+            "LC",
+            "LI",
+            "LK",
+            "LR",
+            "LS",
+            "LT",
+            "LU",
+            "LV",
+            "LY",
+            "MA",
+            "MC",
+            "MD",
+            "ME",
+            "MF",
+            "MG",
+            "MH",
+            "MK",
+            "ML",
+            "MM",
+            "MN",
+            "MO",
+            "MP",
+            "MQ",
+            "MR",
+            "MS",
+            "MT",
+            "MU",
+            "MV",
+            "MW",
+            "MX",
+            "MY",
+            "MZ",
+            "NA",
+            "NC",
+            "NE",
+            "NF",
+            "NG",
+            "NI",
+            "NL",
+            "NO",
+            "NP",
+            "NR",
+            "NT",
+            "NU",
+            "NZ",
+            "OM",
+            "PA",
+            "PE",
+            "PF",
+            "PG",
+            "PH",
+            "PK",
+            "PL",
+            "PM",
+            "PN",
+            "PR",
+            "PS",
+            "PT",
+            "PW",
+            "PY",
+            "QA",
+            "RE",
+            "RO",
+            "RS",
+            "RU",
+            "RW",
+            "SA",
+            "SB",
+            "SC",
+            "SD",
+            "SE",
+            "SF",
+            "SG",
+            "SH",
+            "SI",
+            "SJ",
+            "SK",
+            "SL",
+            "SM",
+            "SN",
+            "SO",
+            "SR",
+            "SS",
+            "ST",
+            "SU",
+            "SV",
+            "SX",
+            "SY",
+            "SZ",
+            "TA",
+            "TC",
+            "TD",
+            "TF",
+            "TG",
+            "TH",
+            "TJ",
+            "TK",
+            "TL",
+            "TM",
+            "TN",
+            "TO",
+            "TP",
+            "TR",
+            "TT",
+            "TV",
+            "TW",
+            "TZ",
+            "UA",
+            "UG",
+            "UK",
+            "UM",
+            "US",
+            "UY",
+            "UZ",
+            "VA",
+            "VC",
+            "VE",
+            "VG",
+            "VI",
+            "VN",
+            "VU",
+            "WF",
+            "WS",
+            "XK",
+            "YE",
+            "YT",
+            "YU",
+            "ZA",
+            "ZM",
+            "ZR",
+            "ZW"
+          ]
         },
         "toCurrency": {
           "type": "string",
@@ -2163,33 +2291,11 @@
         }
       }
     },
-    "ErrorResponse": {
-      "type": "object",
-      "required": [
-        "code",
-        "error",
-        "message"
-      ],
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The error code, different than HTTP status codes"
-        },
-        "error": {
-          "type": "string",
-          "description": "The short message"
-        },
-        "message": {
-          "type": "string",
-          "description": "The detailed, developer friendly message"
-        }
-      }
-    },
     "PaymentResponse": {
       "type": "object",
       "required": [
         "amount",
+        "batchItemId",
         "exchangeRate",
         "exchangeRateQuoteId",
         "id",
@@ -2208,6 +2314,11 @@
           "items": {
             "$ref": "#/definitions/FileAttachment"
           }
+        },
+        "batchItemId": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The payment's batchItemId, as specified in the payment creation batch"
         },
         "ccEmails": {
           "type": "array",
@@ -2249,6 +2360,20 @@
           "description": "The receiving amount and currency of the payment. Deprecated please use amount instead",
           "$ref": "#/definitions/AlignMonetaryAmount"
         },
+        "paymentAction": {
+          "type": "string",
+          "enum": [
+            "SubmitForApproval",
+            "Approve"
+          ]
+        },
+        "paymentApproval": {
+          "description": "Payment approval information",
+          "$ref": "#/definitions/PaymentApprovalResponse"
+        },
+        "paymentApprovalRequest": {
+          "$ref": "#/definitions/PaymentApprovalRequest"
+        },
         "purposeOfPayment": {
           "type": "string",
           "description": "The purpose of payment required by banks for certain countries, applicable for following countries.SG,AE,KR,BR,CN,HK,HR,IS,ID,IN,IL,KE,PK,SA,ZA,TW,UA,VN",
@@ -2271,6 +2396,7 @@
             "Sent",
             "Claimed",
             "PendingAuth",
+            "PendingApproval",
             "Authorized",
             "InProgress",
             "Complete",
@@ -2283,6 +2409,105 @@
           "type": "string",
           "format": "date-time",
           "description": "The creation time of the payment. The format would be UTC, ISO-8601"
+        }
+      }
+    },
+    "PaymentBatchItemRequest": {
+      "type": "object",
+      "required": [
+        "amount",
+        "batchItemId",
+        "exchangeRateQuoteId",
+        "payee"
+      ],
+      "properties": {
+        "amount": {
+          "description": "The amount and currency of the payment",
+          "$ref": "#/definitions/AlignMonetaryAmount"
+        },
+        "approveAutomatically": {
+          "type": "boolean",
+          "example": false,
+          "description": "Whether to automatically move the payment from drafted"
+        },
+        "attachments": {
+          "type": "array",
+          "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
+          "items": {
+            "$ref": "#/definitions/FileAttachment"
+          }
+        },
+        "batchItemId": {
+          "type": "integer",
+          "format": "int64",
+          "description": "An unique batch item ID for mapping responses to requests"
+        },
+        "ccEmails": {
+          "type": "array",
+          "description": "The list of emails who will be notified about the payment",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exchangeRate": {
+          "$ref": "#/definitions/ExchangeRateResponse"
+        },
+        "exchangeRateQuoteId": {
+          "type": "string",
+          "description": "The quote id that was received earlier for the payment"
+        },
+        "externalInvoiceRefId": {
+          "type": "string",
+          "description": "The external invoice if for which payment is made, viewable by receiver"
+        },
+        "notes": {
+          "type": "string",
+          "description": "The memo/note associated with payment, viewable by receiver"
+        },
+        "payee": {
+          "description": "The receiver of the payment",
+          "$ref": "#/definitions/SimpleAccount"
+        },
+        "payeeAmount": {
+          "description": "The receiving amount and currency of the payment. Deprecated please use amount instead",
+          "$ref": "#/definitions/AlignMonetaryAmount"
+        },
+        "paymentAction": {
+          "type": "string",
+          "enum": [
+            "SubmitForApproval",
+            "Approve"
+          ]
+        },
+        "paymentApprovalRequest": {
+          "$ref": "#/definitions/PaymentApprovalRequest"
+        },
+        "purposeOfPayment": {
+          "type": "string",
+          "description": "The purpose of payment required by banks for certain countries, applicable for following countries.SG,AE,KR,BR,CN,HK,HR,IS,ID,IN,IL,KE,PK,SA,ZA,TW,UA,VN",
+          "enum": [
+            "Goods",
+            "Services",
+            "Charitable",
+            "Other"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "description": "current payment status",
+          "enum": [
+            "Drafted",
+            "Sent",
+            "Claimed",
+            "PendingAuth",
+            "PendingApproval",
+            "Authorized",
+            "InProgress",
+            "Complete",
+            "Cancelled",
+            "Closed",
+            "Reversed"
+          ]
         }
       }
     },
@@ -2956,6 +3181,956 @@
         }
       }
     },
+    "PaymentApprovalRequest": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Sort": {
+      "type": "object"
+    },
+    "UserApprovalInfoResponse": {
+      "type": "object",
+      "properties": {
+        "approvalStatus": {
+          "type": "string",
+          "enum": [
+            "Approved",
+            "Pending",
+            "Ignored"
+          ]
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "middleName": {
+          "type": "string"
+        }
+      }
+    },
+    "InvoiceResponse": {
+      "type": "object",
+      "required": [
+        "amount",
+        "exchangeRate",
+        "exchangeRateQuoteId",
+        "id",
+        "payer",
+        "status",
+        "timeCreated"
+      ],
+      "properties": {
+        "amount": {
+          "description": "The amount and currency of the payment",
+          "$ref": "#/definitions/AlignMonetaryAmount"
+        },
+        "attachments": {
+          "type": "array",
+          "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
+          "items": {
+            "$ref": "#/definitions/FileAttachment"
+          }
+        },
+        "ccEmails": {
+          "type": "array",
+          "description": "The list of emails who will be notified about the payment",
+          "items": {
+            "type": "string"
+          }
+        },
+        "claimLink": {
+          "type": "string",
+          "description": "The link that allows the recipient to perform the payment"
+        },
+        "exchangeRate": {
+          "description": "The exchange rate used associated with the invoice",
+          "$ref": "#/definitions/ExchangeRateResponse"
+        },
+        "exchangeRateQuoteId": {
+          "type": "string",
+          "description": "The quote id that was received earlier for the payment"
+        },
+        "externalInvoiceRefId": {
+          "type": "string",
+          "description": "The external invoice if for which payment is made, viewable by receiver"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The invoice id"
+        },
+        "notes": {
+          "type": "string",
+          "description": "The memo/note associated with payment, viewable by receiver"
+        },
+        "payer": {
+          "description": "The sender of the payment",
+          "$ref": "#/definitions/SimpleAccount"
+        },
+        "purposeOfPayment": {
+          "type": "string",
+          "description": "The purpose of payment required by banks for certain countries, applicable for following countries.SG,AE,KR,BR,CN,HK,HR,IS,ID,IN,IL,KE,PK,SA,ZA,TW,UA,VN",
+          "enum": [
+            "Goods",
+            "Services",
+            "Charitable",
+            "Other"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the invoice",
+          "enum": [
+            "Drafted",
+            "Sent",
+            "Cancelled",
+            "Closed",
+            "Claimed",
+            "MarkAsPaid",
+            "Rejected"
+          ]
+        },
+        "timeCreated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The creation time of the invoice. The format would be UTC, ISO-8601"
+        }
+      }
+    },
+    "SimpleAccount": {
+      "type": "object",
+      "required": [
+        "countryCode",
+        "email",
+        "firstName",
+        "lastName",
+        "type"
+      ],
+      "properties": {
+        "businessName": {
+          "type": "string",
+          "description": "The name of the receiver's business, required when account type is business"
+        },
+        "countryCode": {
+          "type": "string",
+          "description": "The 2 letter ISO country codes,ISO Alpha-2",
+          "enum": [
+            "UNDEFINED",
+            "AC",
+            "AD",
+            "AE",
+            "AF",
+            "AG",
+            "AI",
+            "AL",
+            "AM",
+            "AN",
+            "AO",
+            "AQ",
+            "AR",
+            "AS",
+            "AT",
+            "AU",
+            "AW",
+            "AX",
+            "AZ",
+            "BA",
+            "BB",
+            "BD",
+            "BE",
+            "BF",
+            "BG",
+            "BH",
+            "BI",
+            "BJ",
+            "BL",
+            "BM",
+            "BN",
+            "BO",
+            "BQ",
+            "BR",
+            "BS",
+            "BT",
+            "BU",
+            "BV",
+            "BW",
+            "BY",
+            "BZ",
+            "CA",
+            "CC",
+            "CD",
+            "CF",
+            "CG",
+            "CH",
+            "CI",
+            "CK",
+            "CL",
+            "CM",
+            "CN",
+            "CO",
+            "CP",
+            "CR",
+            "CS",
+            "CU",
+            "CV",
+            "CW",
+            "CX",
+            "CY",
+            "CZ",
+            "DE",
+            "DG",
+            "DJ",
+            "DK",
+            "DM",
+            "DO",
+            "DZ",
+            "EA",
+            "EC",
+            "EE",
+            "EG",
+            "EH",
+            "ER",
+            "ES",
+            "ET",
+            "EU",
+            "FI",
+            "FJ",
+            "FK",
+            "FM",
+            "FO",
+            "FR",
+            "FX",
+            "GA",
+            "GB",
+            "GD",
+            "GE",
+            "GF",
+            "GG",
+            "GH",
+            "GI",
+            "GL",
+            "GM",
+            "GN",
+            "GP",
+            "GQ",
+            "GR",
+            "GS",
+            "GT",
+            "GU",
+            "GW",
+            "GY",
+            "HK",
+            "HM",
+            "HN",
+            "HR",
+            "HT",
+            "HU",
+            "IC",
+            "ID",
+            "IE",
+            "IL",
+            "IM",
+            "IN",
+            "IO",
+            "IQ",
+            "IR",
+            "IS",
+            "IT",
+            "JE",
+            "JM",
+            "JO",
+            "JP",
+            "KE",
+            "KG",
+            "KH",
+            "KI",
+            "KM",
+            "KN",
+            "KP",
+            "KR",
+            "KW",
+            "KY",
+            "KZ",
+            "LA",
+            "LB",
+            "LC",
+            "LI",
+            "LK",
+            "LR",
+            "LS",
+            "LT",
+            "LU",
+            "LV",
+            "LY",
+            "MA",
+            "MC",
+            "MD",
+            "ME",
+            "MF",
+            "MG",
+            "MH",
+            "MK",
+            "ML",
+            "MM",
+            "MN",
+            "MO",
+            "MP",
+            "MQ",
+            "MR",
+            "MS",
+            "MT",
+            "MU",
+            "MV",
+            "MW",
+            "MX",
+            "MY",
+            "MZ",
+            "NA",
+            "NC",
+            "NE",
+            "NF",
+            "NG",
+            "NI",
+            "NL",
+            "NO",
+            "NP",
+            "NR",
+            "NT",
+            "NU",
+            "NZ",
+            "OM",
+            "PA",
+            "PE",
+            "PF",
+            "PG",
+            "PH",
+            "PK",
+            "PL",
+            "PM",
+            "PN",
+            "PR",
+            "PS",
+            "PT",
+            "PW",
+            "PY",
+            "QA",
+            "RE",
+            "RO",
+            "RS",
+            "RU",
+            "RW",
+            "SA",
+            "SB",
+            "SC",
+            "SD",
+            "SE",
+            "SF",
+            "SG",
+            "SH",
+            "SI",
+            "SJ",
+            "SK",
+            "SL",
+            "SM",
+            "SN",
+            "SO",
+            "SR",
+            "SS",
+            "ST",
+            "SU",
+            "SV",
+            "SX",
+            "SY",
+            "SZ",
+            "TA",
+            "TC",
+            "TD",
+            "TF",
+            "TG",
+            "TH",
+            "TJ",
+            "TK",
+            "TL",
+            "TM",
+            "TN",
+            "TO",
+            "TP",
+            "TR",
+            "TT",
+            "TV",
+            "TW",
+            "TZ",
+            "UA",
+            "UG",
+            "UK",
+            "UM",
+            "US",
+            "UY",
+            "UZ",
+            "VA",
+            "VC",
+            "VE",
+            "VG",
+            "VI",
+            "VN",
+            "VU",
+            "WF",
+            "WS",
+            "XK",
+            "YE",
+            "YT",
+            "YU",
+            "ZA",
+            "ZM",
+            "ZR",
+            "ZW"
+          ]
+        },
+        "email": {
+          "type": "string",
+          "description": "The email of the receiver"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The first name of the receiver"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The last name of the receiver"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the receiver",
+          "enum": [
+            "Incomplete",
+            "Business",
+            "Personal"
+          ]
+        }
+      }
+    },
+    "ContactResponse": {
+      "type": "object"
+    },
+    "ResponseSummary": {
+      "type": "object",
+      "properties": {
+        "failure": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FailureResponse"
+          }
+        },
+        "success": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "ExchangeRateResponse": {
+      "type": "object",
+      "required": [
+        "expiry",
+        "fromCurrency",
+        "id",
+        "rate",
+        "timeCreated",
+        "toAmount",
+        "toCurrency"
+      ],
+      "properties": {
+        "expiry": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The expiry time of the current rate quote"
+        },
+        "fromAmount": {
+          "type": "number",
+          "format": "double",
+          "description": "The source amount, either from or to amount is allowed, the other one is calculated"
+        },
+        "fromCurrency": {
+          "type": "string",
+          "description": "The source currency",
+          "enum": [
+            "UNDEFINED",
+            "AED",
+            "AFN",
+            "ALL",
+            "AMD",
+            "ANG",
+            "AOA",
+            "ARS",
+            "AUD",
+            "AWG",
+            "AZN",
+            "BAM",
+            "BBD",
+            "BDT",
+            "BGN",
+            "BHD",
+            "BIF",
+            "BMD",
+            "BND",
+            "BOB",
+            "BOV",
+            "BRL",
+            "BSD",
+            "BTN",
+            "BWP",
+            "BYN",
+            "BYR",
+            "BZD",
+            "CAD",
+            "CDF",
+            "CHE",
+            "CHF",
+            "CHW",
+            "CLF",
+            "CLP",
+            "CNY",
+            "COP",
+            "COU",
+            "CRC",
+            "CUC",
+            "CUP",
+            "CVE",
+            "CZK",
+            "DJF",
+            "DKK",
+            "DOP",
+            "DZD",
+            "EGP",
+            "ERN",
+            "ETB",
+            "EUR",
+            "FJD",
+            "FKP",
+            "GBP",
+            "GEL",
+            "GHS",
+            "GIP",
+            "GMD",
+            "GNF",
+            "GTQ",
+            "GYD",
+            "HKD",
+            "HNL",
+            "HRK",
+            "HTG",
+            "HUF",
+            "IDR",
+            "ILS",
+            "INR",
+            "IQD",
+            "IRR",
+            "ISK",
+            "JMD",
+            "JOD",
+            "JPY",
+            "KES",
+            "KGS",
+            "KHR",
+            "KMF",
+            "KPW",
+            "KRW",
+            "KWD",
+            "KYD",
+            "KZT",
+            "LAK",
+            "LBP",
+            "LKR",
+            "LRD",
+            "LSL",
+            "LTL",
+            "LYD",
+            "MAD",
+            "MDL",
+            "MGA",
+            "MKD",
+            "MMK",
+            "MNT",
+            "MOP",
+            "MRO",
+            "MUR",
+            "MVR",
+            "MWK",
+            "MXN",
+            "MXV",
+            "MYR",
+            "MZN",
+            "NAD",
+            "NGN",
+            "NIO",
+            "NOK",
+            "NPR",
+            "NZD",
+            "OMR",
+            "PAB",
+            "PEN",
+            "PGK",
+            "PHP",
+            "PKR",
+            "PLN",
+            "PYG",
+            "QAR",
+            "RON",
+            "RSD",
+            "RUB",
+            "RUR",
+            "RWF",
+            "SAR",
+            "SBD",
+            "SCR",
+            "SDG",
+            "SEK",
+            "SGD",
+            "SHP",
+            "SLL",
+            "SOS",
+            "SRD",
+            "SSP",
+            "STD",
+            "SVC",
+            "SYP",
+            "SZL",
+            "THB",
+            "TJS",
+            "TMT",
+            "TND",
+            "TOP",
+            "TRY",
+            "TTD",
+            "TWD",
+            "TZS",
+            "UAH",
+            "UGX",
+            "USD",
+            "USN",
+            "USS",
+            "UYI",
+            "UYU",
+            "UZS",
+            "VEF",
+            "VND",
+            "VUV",
+            "WST",
+            "XAF",
+            "XAG",
+            "XAU",
+            "XBA",
+            "XBB",
+            "XBC",
+            "XBD",
+            "XCD",
+            "XDR",
+            "XOF",
+            "XPD",
+            "XPF",
+            "XPT",
+            "XSU",
+            "XTS",
+            "XUA",
+            "XXX",
+            "YER",
+            "ZAR",
+            "ZMW",
+            "ZWL"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "description": "The quote id"
+        },
+        "rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The Veem exchange rate for current transfer"
+        },
+        "timeCreated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The quote generation time"
+        },
+        "toAmount": {
+          "type": "number",
+          "format": "double",
+          "description": "The target amount, either from or to amount is allowed, the other one is calculated"
+        },
+        "toCurrency": {
+          "type": "string",
+          "description": "The target currency",
+          "enum": [
+            "UNDEFINED",
+            "AED",
+            "AFN",
+            "ALL",
+            "AMD",
+            "ANG",
+            "AOA",
+            "ARS",
+            "AUD",
+            "AWG",
+            "AZN",
+            "BAM",
+            "BBD",
+            "BDT",
+            "BGN",
+            "BHD",
+            "BIF",
+            "BMD",
+            "BND",
+            "BOB",
+            "BOV",
+            "BRL",
+            "BSD",
+            "BTN",
+            "BWP",
+            "BYN",
+            "BYR",
+            "BZD",
+            "CAD",
+            "CDF",
+            "CHE",
+            "CHF",
+            "CHW",
+            "CLF",
+            "CLP",
+            "CNY",
+            "COP",
+            "COU",
+            "CRC",
+            "CUC",
+            "CUP",
+            "CVE",
+            "CZK",
+            "DJF",
+            "DKK",
+            "DOP",
+            "DZD",
+            "EGP",
+            "ERN",
+            "ETB",
+            "EUR",
+            "FJD",
+            "FKP",
+            "GBP",
+            "GEL",
+            "GHS",
+            "GIP",
+            "GMD",
+            "GNF",
+            "GTQ",
+            "GYD",
+            "HKD",
+            "HNL",
+            "HRK",
+            "HTG",
+            "HUF",
+            "IDR",
+            "ILS",
+            "INR",
+            "IQD",
+            "IRR",
+            "ISK",
+            "JMD",
+            "JOD",
+            "JPY",
+            "KES",
+            "KGS",
+            "KHR",
+            "KMF",
+            "KPW",
+            "KRW",
+            "KWD",
+            "KYD",
+            "KZT",
+            "LAK",
+            "LBP",
+            "LKR",
+            "LRD",
+            "LSL",
+            "LTL",
+            "LYD",
+            "MAD",
+            "MDL",
+            "MGA",
+            "MKD",
+            "MMK",
+            "MNT",
+            "MOP",
+            "MRO",
+            "MUR",
+            "MVR",
+            "MWK",
+            "MXN",
+            "MXV",
+            "MYR",
+            "MZN",
+            "NAD",
+            "NGN",
+            "NIO",
+            "NOK",
+            "NPR",
+            "NZD",
+            "OMR",
+            "PAB",
+            "PEN",
+            "PGK",
+            "PHP",
+            "PKR",
+            "PLN",
+            "PYG",
+            "QAR",
+            "RON",
+            "RSD",
+            "RUB",
+            "RUR",
+            "RWF",
+            "SAR",
+            "SBD",
+            "SCR",
+            "SDG",
+            "SEK",
+            "SGD",
+            "SHP",
+            "SLL",
+            "SOS",
+            "SRD",
+            "SSP",
+            "STD",
+            "SVC",
+            "SYP",
+            "SZL",
+            "THB",
+            "TJS",
+            "TMT",
+            "TND",
+            "TOP",
+            "TRY",
+            "TTD",
+            "TWD",
+            "TZS",
+            "UAH",
+            "UGX",
+            "USD",
+            "USN",
+            "USS",
+            "UYI",
+            "UYU",
+            "UZS",
+            "VEF",
+            "VND",
+            "VUV",
+            "WST",
+            "XAF",
+            "XAG",
+            "XAU",
+            "XBA",
+            "XBB",
+            "XBC",
+            "XBD",
+            "XCD",
+            "XDR",
+            "XOF",
+            "XPD",
+            "XPF",
+            "XPT",
+            "XSU",
+            "XTS",
+            "XUA",
+            "XXX",
+            "YER",
+            "ZAR",
+            "ZMW",
+            "ZWL"
+          ]
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "required": [
+        "code",
+        "error",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The error code, different than HTTP status codes"
+        },
+        "error": {
+          "type": "string",
+          "description": "The short message"
+        },
+        "message": {
+          "type": "string",
+          "description": "The detailed, developer friendly message"
+        }
+      }
+    },
+    "AsyncBatchItemResponse": {
+      "type": "object",
+      "properties": {
+        "batchItemId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "errorInfo": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "IN_PROGRESS",
+            "COMPLETED",
+            "FAILED"
+          ]
+        }
+      }
+    },
+    "AsyncBatchItemPaymentResponse": {
+      "type": "object",
+      "properties": {
+        "batchItemId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "errorInfo": {
+          "type": "string"
+        },
+        "paymentId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "IN_PROGRESS",
+            "COMPLETED",
+            "FAILED"
+          ]
+        }
+      }
+    },
     "PushPaymentInfoResponse": {
       "type": "object",
       "properties": {
@@ -2974,6 +4149,33 @@
         },
         "reference": {
           "type": "string"
+        }
+      }
+    },
+    "PaymentApprovalResponse": {
+      "type": "object",
+      "properties": {
+        "approvalStatus": {
+          "type": "string",
+          "enum": [
+            "Approved",
+            "Pending",
+            "Ignored"
+          ]
+        },
+        "approverNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "approverNumberRequired": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userApprovalList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserApprovalInfoResponse"
+          }
         }
       }
     },
@@ -3031,6 +4233,16 @@
           "description": "The receiving amount and currency of the payment. Deprecated please use amount instead",
           "$ref": "#/definitions/AlignMonetaryAmount"
         },
+        "paymentAction": {
+          "type": "string",
+          "enum": [
+            "SubmitForApproval",
+            "Approve"
+          ]
+        },
+        "paymentApprovalRequest": {
+          "$ref": "#/definitions/PaymentApprovalRequest"
+        },
         "purposeOfPayment": {
           "type": "string",
           "description": "The purpose of payment required by banks for certain countries, applicable for following countries.SG,AE,KR,BR,CN,HK,HR,IS,ID,IN,IL,KE,PK,SA,ZA,TW,UA,VN",
@@ -3039,6 +4251,23 @@
             "Services",
             "Charitable",
             "Other"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "description": "current payment status",
+          "enum": [
+            "Drafted",
+            "Sent",
+            "Claimed",
+            "PendingAuth",
+            "PendingApproval",
+            "Authorized",
+            "InProgress",
+            "Complete",
+            "Cancelled",
+            "Closed",
+            "Reversed"
           ]
         }
       }
