@@ -36,7 +36,7 @@
     },
     {
       "name": "exchange-rate-controller",
-      "description": "Exchange Rate APIs"
+      "description": "Exchange Rate Controller"
     },
     {
       "name": "invoice-controller",
@@ -44,15 +44,19 @@
     },
     {
       "name": "payment-controller",
-      "description": "Payment creation and management APIs"
+      "description": "Payment Controller"
+    },
+    {
+      "name": "contact-controller",
+      "description": "Contact Controller"
+    },
+    {
+      "name": "customer-controller",
+      "description": "Customer Controller"
     },
     {
       "name": "meta-controller",
-      "description": "Information about the APIs"
-    },
-    {
-      "name": "account-controller",
-      "description": "Account management APIs"
+      "description": "Meta Controller"
     }
   ],
   "paths": {
@@ -71,6 +75,16 @@
         ],
         "produces": [
           "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "bankFields",
+            "in": "query",
+            "description": "bankFields",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
         ],
         "responses": {
           "200": {
@@ -96,130 +110,6 @@
           },
           "403": {
             "description": "Forbidden, the token owner doesn't have permission to operate current API"
-          }
-        }
-      }
-    },
-    "/veem/v1.0/accounts/contacts": {
-      "post": {
-        "tags": [
-          "account-controller"
-        ],
-        "summary": "createContact",
-        "description": "create a contact and sends an invitation",
-        "operationId": "createContactUsingPOST_1",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "request",
-            "description": "request",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ContactRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success, a contact is created in Veem",
-            "schema": {
-              "$ref": "#/definitions/ContactResponse"
-            }
-          },
-          "201": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/ContactResponse"
-            }
-          },
-          "400": {
-            "description": "Unauthorized, the token is invalid or expired",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized, the token is invalid or expired"
-          },
-          "500": {
-            "description": "Internal Server Error, see the error code and API doc for reference"
-          },
-          "403": {
-            "description": "Forbidden, the token owner doesn't have permission to operate current API"
-          },
-          "404": {
-            "description": "Not Found, the resource not found"
-          }
-        }
-      }
-    },
-    "/veem/v1.0/accounts/contacts/batch": {
-      "post": {
-        "tags": [
-          "account-controller"
-        ],
-        "summary": "createContactInBatch",
-        "description": "create a contact and sends an invitation",
-        "operationId": "createContactUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "request",
-            "description": "request",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ContactRequest"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success, a contact is created in Veem",
-            "schema": {
-              "$ref": "#/definitions/ContactResponse"
-            }
-          },
-          "201": {
-            "description": "Created",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ContactResponse"
-              }
-            }
-          },
-          "400": {
-            "description": "Unauthorized, the token is invalid or expired",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized, the token is invalid or expired"
-          },
-          "500": {
-            "description": "Internal Server Error, see the error code and API doc for reference"
-          },
-          "403": {
-            "description": "Forbidden, the token owner doesn't have permission to operate current API"
-          },
-          "404": {
-            "description": "Not Found, the resource not found"
           }
         }
       }
@@ -309,6 +199,272 @@
         }
       }
     },
+    "/veem/v1.0/contacts": {
+      "get": {
+        "tags": [
+          "contact-controller"
+        ],
+        "summary": "getContacts",
+        "description": "Get a page of account contacts by email address, first,last name, batchId, and business name",
+        "operationId": "getContactsUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "contactRequest",
+            "description": "contactRequest",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ContactRequest"
+            }
+          },
+          {
+            "name": "batchId",
+            "in": "query",
+            "description": "batchId",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "batchItemIds",
+            "in": "query",
+            "description": "batchItemIds",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "pageNumber",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "pageSize",
+            "required": false,
+            "type": "integer",
+            "default": 20,
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, all successful contacts are returned",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          },
+          "400": {
+            "description": "Request failed, invalid search parameters"
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner lacks permission to operate the current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
+    "/veem/v1.0/contacts/batch": {
+      "post": {
+        "tags": [
+          "contact-controller"
+        ],
+        "summary": "createContacts",
+        "description": "Create multiple contacts in a batch",
+        "operationId": "createContactsUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "description": "request",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ContactBatchItemRequest"
+              }
+            }
+          },
+          {
+            "name": "includeItems",
+            "in": "query",
+            "description": "includeItems",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request data validated, processing started",
+            "schema": {
+              "$ref": "#/definitions/BatchResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request data, no requests were processed",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner lacks permission to operate the current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
+    "/veem/v1.0/contacts/batch/{batchId}": {
+      "get": {
+        "tags": [
+          "contact-controller"
+        ],
+        "summary": "getContactBatch",
+        "description": "Get the current state of a contact creation batch",
+        "operationId": "getContactBatchUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "batchId",
+            "in": "path",
+            "description": "batchId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "includeItems",
+            "in": "query",
+            "description": "includeItems",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request data validated, processing started",
+            "schema": {
+              "$ref": "#/definitions/BatchResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request data, no requests were processed",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner lacks permission to operate the current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
+    "/veem/v1.0/customers": {
+      "get": {
+        "tags": [
+          "customer-controller"
+        ],
+        "summary": "searchCustomers",
+        "description": "Search Veem Contacts",
+        "operationId": "searchCustomersUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "email",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of Veem customers matching the search criteria is returned",
+            "schema": {
+              "$ref": "#/definitions/PublicAccountResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid email address in request parameter",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner lacks permission to operate the current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
     "/veem/v1.0/exchangerates/quotes": {
       "post": {
         "tags": [
@@ -394,7 +550,7 @@
           "200": {
             "description": "Success, all quotes have been have been created in Veem",
             "schema": {
-              "$ref": "#/definitions/ExchangeRateResponse"
+              "$ref": "#/definitions/ResponseSummary"
             }
           },
           "201": {
@@ -1145,11 +1301,7 @@
           "format": "int64"
         },
         "status": {
-          "type": "string",
-          "enum": [
-            "IN_PROGRESS",
-            "COMPLETED"
-          ]
+          "type": "string"
         },
         "totalItems": {
           "type": "integer",
@@ -1157,330 +1309,67 @@
         }
       }
     },
-    "ContactRequest": {
+    "AsyncBatchItemContactResponse": {
       "type": "object",
-      "required": [
-        "countryCode",
-        "email",
-        "firstName",
-        "lastName",
-        "type"
-      ],
       "properties": {
-        "autoRemind": {
-          "type": "boolean"
+        "accountId": {
+          "type": "integer",
+          "format": "int64"
         },
-        "businessName": {
-          "type": "string",
-          "description": "The name of the receiver's business, required when account type is business"
+        "batchItemId": {
+          "type": "integer",
+          "format": "int64"
         },
-        "countryCode": {
+        "errorInfo": {
+          "$ref": "#/definitions/ErrorResponse"
+        },
+        "status": {
           "type": "string",
-          "description": "The 2 letter ISO country codes,ISO Alpha-2",
           "enum": [
-            "UNDEFINED",
-            "AC",
-            "AD",
-            "AE",
-            "AF",
-            "AG",
-            "AI",
-            "AL",
-            "AM",
-            "AN",
-            "AO",
-            "AQ",
-            "AR",
-            "AS",
-            "AT",
-            "AU",
-            "AW",
-            "AX",
-            "AZ",
-            "BA",
-            "BB",
-            "BD",
-            "BE",
-            "BF",
-            "BG",
-            "BH",
-            "BI",
-            "BJ",
-            "BL",
-            "BM",
-            "BN",
-            "BO",
-            "BQ",
-            "BR",
-            "BS",
-            "BT",
-            "BU",
-            "BV",
-            "BW",
-            "BY",
-            "BZ",
-            "CA",
-            "CC",
-            "CD",
-            "CF",
-            "CG",
-            "CH",
-            "CI",
-            "CK",
-            "CL",
-            "CM",
-            "CN",
-            "CO",
-            "CP",
-            "CR",
-            "CS",
-            "CU",
-            "CV",
-            "CW",
-            "CX",
-            "CY",
-            "CZ",
-            "DE",
-            "DG",
-            "DJ",
-            "DK",
-            "DM",
-            "DO",
-            "DZ",
-            "EA",
-            "EC",
-            "EE",
-            "EG",
-            "EH",
-            "ER",
-            "ES",
-            "ET",
-            "EU",
-            "FI",
-            "FJ",
-            "FK",
-            "FM",
-            "FO",
-            "FR",
-            "FX",
-            "GA",
-            "GB",
-            "GD",
-            "GE",
-            "GF",
-            "GG",
-            "GH",
-            "GI",
-            "GL",
-            "GM",
-            "GN",
-            "GP",
-            "GQ",
-            "GR",
-            "GS",
-            "GT",
-            "GU",
-            "GW",
-            "GY",
-            "HK",
-            "HM",
-            "HN",
-            "HR",
-            "HT",
-            "HU",
-            "IC",
-            "ID",
-            "IE",
-            "IL",
-            "IM",
-            "IN",
-            "IO",
-            "IQ",
-            "IR",
-            "IS",
-            "IT",
-            "JE",
-            "JM",
-            "JO",
-            "JP",
-            "KE",
-            "KG",
-            "KH",
-            "KI",
-            "KM",
-            "KN",
-            "KP",
-            "KR",
-            "KW",
-            "KY",
-            "KZ",
-            "LA",
-            "LB",
-            "LC",
-            "LI",
-            "LK",
-            "LR",
-            "LS",
-            "LT",
-            "LU",
-            "LV",
-            "LY",
-            "MA",
-            "MC",
-            "MD",
-            "ME",
-            "MF",
-            "MG",
-            "MH",
-            "MK",
-            "ML",
-            "MM",
-            "MN",
-            "MO",
-            "MP",
-            "MQ",
-            "MR",
-            "MS",
-            "MT",
-            "MU",
-            "MV",
-            "MW",
-            "MX",
-            "MY",
-            "MZ",
-            "NA",
-            "NC",
-            "NE",
-            "NF",
-            "NG",
-            "NI",
-            "NL",
-            "NO",
-            "NP",
-            "NR",
-            "NT",
-            "NU",
-            "NZ",
-            "OM",
-            "PA",
-            "PE",
-            "PF",
-            "PG",
-            "PH",
-            "PK",
-            "PL",
-            "PM",
-            "PN",
-            "PR",
-            "PS",
-            "PT",
-            "PW",
-            "PY",
-            "QA",
-            "RE",
-            "RO",
-            "RS",
-            "RU",
-            "RW",
-            "SA",
-            "SB",
-            "SC",
-            "SD",
-            "SE",
-            "SF",
-            "SG",
-            "SH",
-            "SI",
-            "SJ",
-            "SK",
-            "SL",
-            "SM",
-            "SN",
-            "SO",
-            "SR",
-            "SS",
-            "ST",
-            "SU",
-            "SV",
-            "SX",
-            "SY",
-            "SZ",
-            "TA",
-            "TC",
-            "TD",
-            "TF",
-            "TG",
-            "TH",
-            "TJ",
-            "TK",
-            "TL",
-            "TM",
-            "TN",
-            "TO",
-            "TP",
-            "TR",
-            "TT",
-            "TV",
-            "TW",
-            "TZ",
-            "UA",
-            "UG",
-            "UK",
-            "UM",
-            "US",
-            "UY",
-            "UZ",
-            "VA",
-            "VC",
-            "VE",
-            "VG",
-            "VI",
-            "VN",
-            "VU",
-            "WF",
-            "WS",
-            "XK",
-            "YE",
-            "YT",
-            "YU",
-            "ZA",
-            "ZM",
-            "ZR",
-            "ZW"
+            "IN_PROGRESS",
+            "COMPLETED",
+            "FAILED"
           ]
-        },
-        "email": {
-          "type": "string",
-          "description": "The email of the receiver"
-        },
-        "firstName": {
-          "type": "string",
-          "description": "The first name of the receiver"
-        },
-        "lastName": {
-          "type": "string",
-          "description": "The last name of the receiver"
-        },
-        "notifyEvents": {
+        }
+      }
+    },
+    "Page«ContactResponse»": {
+      "type": "object",
+      "properties": {
+        "content": {
           "type": "array",
           "items": {
-            "type": "string",
-            "enum": [
-              "Viewed",
-              "SignedUp",
-              "PaymentReady",
-              "Closed"
-            ]
+            "$ref": "#/definitions/ContactResponse"
           }
         },
-        "type": {
-          "type": "string",
-          "description": "The type of the receiver",
-          "enum": [
-            "Incomplete",
-            "Business",
-            "Personal"
-          ]
+        "first": {
+          "type": "boolean"
+        },
+        "last": {
+          "type": "boolean"
+        },
+        "number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "numberOfElements": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "totalElements": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1505,11 +1394,7 @@
           "format": "int64"
         },
         "status": {
-          "type": "string",
-          "enum": [
-            "IN_PROGRESS",
-            "COMPLETED"
-          ]
+          "type": "string"
         },
         "totalItems": {
           "type": "integer",
@@ -2291,6 +2176,46 @@
         }
       }
     },
+    "Page«PublicAccountResponse»": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PublicAccountResponse"
+          }
+        },
+        "first": {
+          "type": "boolean"
+        },
+        "last": {
+          "type": "boolean"
+        },
+        "number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "numberOfElements": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "totalElements": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "PaymentResponse": {
       "type": "object",
       "required": [
@@ -2417,6 +2342,7 @@
       "required": [
         "amount",
         "batchItemId",
+        "collectionId",
         "exchangeRateQuoteId",
         "payee"
       ],
@@ -2508,12 +2434,19 @@
             "Closed",
             "Reversed"
           ]
+        },
+        "collectionId": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
     "CountryCurrencyResponse": {
       "type": "object",
       "properties": {
+        "bankFields": {
+          "$ref": "#/definitions/JSONArray"
+        },
         "country": {
           "type": "string",
           "enum": [
@@ -3623,7 +3556,419 @@
         }
       }
     },
+    "BankAccountRequest": {
+      "type": "object",
+      "properties": {
+        "bankAccountNumber": {
+          "type": "string"
+        },
+        "bankAddress": {
+          "$ref": "#/definitions/AddressRequest"
+        },
+        "bankCnaps": {
+          "type": "string"
+        },
+        "bankCode": {
+          "type": "string"
+        },
+        "bankIfscBranchCode": {
+          "type": "string"
+        },
+        "bankInstitutionNumber": {
+          "type": "string"
+        },
+        "bankName": {
+          "type": "string"
+        },
+        "beneficiaryName": {
+          "type": "string"
+        },
+        "branchCode": {
+          "type": "string"
+        },
+        "bsbBankCode": {
+          "type": "string"
+        },
+        "clabe": {
+          "type": "string"
+        },
+        "currencyCode": {
+          "type": "string"
+        },
+        "iban": {
+          "type": "string"
+        },
+        "isoCountryCode": {
+          "type": "string"
+        },
+        "routingNumber": {
+          "type": "string"
+        },
+        "sortCode": {
+          "type": "string"
+        },
+        "swiftBic": {
+          "type": "string"
+        },
+        "transitCode": {
+          "type": "string"
+        }
+      }
+    },
+    "BatchResponse«AsyncBatchItemContactResponse»": {
+      "type": "object",
+      "properties": {
+        "batchId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "batchItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AsyncBatchItemContactResponse"
+          }
+        },
+        "hasErrors": {
+          "type": "boolean"
+        },
+        "processedItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "type": "string"
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
     "ContactResponse": {
+      "type": "object",
+      "required": [
+        "businessName",
+        "contactAccountId",
+        "dialCode",
+        "email",
+        "firstName",
+        "isoCountryCode",
+        "lastName",
+        "phoneNumber"
+      ],
+      "properties": {
+        "batchItemId": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The contact's batchItemId, as specified in the contacts creation batch"
+        },
+        "businessName": {
+          "type": "string",
+          "description": "The contact's business name"
+        },
+        "contactAccountId": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The contact's account id"
+        },
+        "dialCode": {
+          "type": "string",
+          "description": "The contact's phone dial code"
+        },
+        "email": {
+          "type": "string",
+          "description": "The contact's email"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The contact's first name"
+        },
+        "isoCountryCode": {
+          "type": "string",
+          "description": "The contact's iso country code",
+          "enum": [
+            "UNDEFINED",
+            "AC",
+            "AD",
+            "AE",
+            "AF",
+            "AG",
+            "AI",
+            "AL",
+            "AM",
+            "AN",
+            "AO",
+            "AQ",
+            "AR",
+            "AS",
+            "AT",
+            "AU",
+            "AW",
+            "AX",
+            "AZ",
+            "BA",
+            "BB",
+            "BD",
+            "BE",
+            "BF",
+            "BG",
+            "BH",
+            "BI",
+            "BJ",
+            "BL",
+            "BM",
+            "BN",
+            "BO",
+            "BQ",
+            "BR",
+            "BS",
+            "BT",
+            "BU",
+            "BV",
+            "BW",
+            "BY",
+            "BZ",
+            "CA",
+            "CC",
+            "CD",
+            "CF",
+            "CG",
+            "CH",
+            "CI",
+            "CK",
+            "CL",
+            "CM",
+            "CN",
+            "CO",
+            "CP",
+            "CR",
+            "CS",
+            "CU",
+            "CV",
+            "CW",
+            "CX",
+            "CY",
+            "CZ",
+            "DE",
+            "DG",
+            "DJ",
+            "DK",
+            "DM",
+            "DO",
+            "DZ",
+            "EA",
+            "EC",
+            "EE",
+            "EG",
+            "EH",
+            "ER",
+            "ES",
+            "ET",
+            "EU",
+            "FI",
+            "FJ",
+            "FK",
+            "FM",
+            "FO",
+            "FR",
+            "FX",
+            "GA",
+            "GB",
+            "GD",
+            "GE",
+            "GF",
+            "GG",
+            "GH",
+            "GI",
+            "GL",
+            "GM",
+            "GN",
+            "GP",
+            "GQ",
+            "GR",
+            "GS",
+            "GT",
+            "GU",
+            "GW",
+            "GY",
+            "HK",
+            "HM",
+            "HN",
+            "HR",
+            "HT",
+            "HU",
+            "IC",
+            "ID",
+            "IE",
+            "IL",
+            "IM",
+            "IN",
+            "IO",
+            "IQ",
+            "IR",
+            "IS",
+            "IT",
+            "JE",
+            "JM",
+            "JO",
+            "JP",
+            "KE",
+            "KG",
+            "KH",
+            "KI",
+            "KM",
+            "KN",
+            "KP",
+            "KR",
+            "KW",
+            "KY",
+            "KZ",
+            "LA",
+            "LB",
+            "LC",
+            "LI",
+            "LK",
+            "LR",
+            "LS",
+            "LT",
+            "LU",
+            "LV",
+            "LY",
+            "MA",
+            "MC",
+            "MD",
+            "ME",
+            "MF",
+            "MG",
+            "MH",
+            "MK",
+            "ML",
+            "MM",
+            "MN",
+            "MO",
+            "MP",
+            "MQ",
+            "MR",
+            "MS",
+            "MT",
+            "MU",
+            "MV",
+            "MW",
+            "MX",
+            "MY",
+            "MZ",
+            "NA",
+            "NC",
+            "NE",
+            "NF",
+            "NG",
+            "NI",
+            "NL",
+            "NO",
+            "NP",
+            "NR",
+            "NT",
+            "NU",
+            "NZ",
+            "OM",
+            "PA",
+            "PE",
+            "PF",
+            "PG",
+            "PH",
+            "PK",
+            "PL",
+            "PM",
+            "PN",
+            "PR",
+            "PS",
+            "PT",
+            "PW",
+            "PY",
+            "QA",
+            "RE",
+            "RO",
+            "RS",
+            "RU",
+            "RW",
+            "SA",
+            "SB",
+            "SC",
+            "SD",
+            "SE",
+            "SF",
+            "SG",
+            "SH",
+            "SI",
+            "SJ",
+            "SK",
+            "SL",
+            "SM",
+            "SN",
+            "SO",
+            "SR",
+            "SS",
+            "ST",
+            "SU",
+            "SV",
+            "SX",
+            "SY",
+            "SZ",
+            "TA",
+            "TC",
+            "TD",
+            "TF",
+            "TG",
+            "TH",
+            "TJ",
+            "TK",
+            "TL",
+            "TM",
+            "TN",
+            "TO",
+            "TP",
+            "TR",
+            "TT",
+            "TV",
+            "TW",
+            "TZ",
+            "UA",
+            "UG",
+            "UK",
+            "UM",
+            "US",
+            "UY",
+            "UZ",
+            "VA",
+            "VC",
+            "VE",
+            "VG",
+            "VI",
+            "VN",
+            "VU",
+            "WF",
+            "WS",
+            "XK",
+            "YE",
+            "YT",
+            "YU",
+            "ZA",
+            "ZM",
+            "ZR",
+            "ZW"
+          ]
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The contact's last name"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The contact's phone number"
+        }
+      }
+    },
+    "JSONArray": {
       "type": "object"
     },
     "ResponseSummary": {
@@ -4095,7 +4440,7 @@
           "format": "int64"
         },
         "errorInfo": {
-          "type": "string"
+          "$ref": "#/definitions/ErrorResponse"
         },
         "status": {
           "type": "string",
@@ -4115,7 +4460,7 @@
           "format": "int64"
         },
         "errorInfo": {
-          "type": "string"
+          "$ref": "#/definitions/ErrorResponse"
         },
         "paymentId": {
           "type": "integer",
@@ -4127,6 +4472,76 @@
             "IN_PROGRESS",
             "COMPLETED",
             "FAILED"
+          ]
+        }
+      }
+    },
+    "ContactBatchItemRequest": {
+      "type": "object",
+      "required": [
+        "batchItemId",
+        "email",
+        "firstName",
+        "isoCountryCode",
+        "lastName",
+        "phoneDialCode",
+        "phoneNumber",
+        "type"
+      ],
+      "properties": {
+        "bankAccount": {
+          "description": "The contact's bank information",
+          "$ref": "#/definitions/BankAccountRequest"
+        },
+        "batchItemId": {
+          "type": "integer",
+          "format": "int64",
+          "description": "A unique identifier for this request within the batch"
+        },
+        "businessAddress": {
+          "description": "The contact's business address",
+          "$ref": "#/definitions/AddressRequest"
+        },
+        "businessName": {
+          "type": "string",
+          "description": "The name of the contact's business (required when account type is business)"
+        },
+        "email": {
+          "type": "string",
+          "description": "The contact's email address"
+        },
+        "externalBusinessId": {
+          "type": "integer",
+          "format": "int64",
+          "description": "A custom identifier for this contact"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The contact's first name"
+        },
+        "isoCountryCode": {
+          "type": "string",
+          "description": "The contact's 2-letter ISO country code (ISO Alpha-2)"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The contact's last name"
+        },
+        "phoneDialCode": {
+          "type": "string",
+          "description": "The contact's phone dial code (e.g. +1)"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The contact's phone number"
+        },
+        "type": {
+          "type": "string",
+          "description": "The contact type",
+          "enum": [
+            "Incomplete",
+            "Business",
+            "Personal"
           ]
         }
       }
@@ -4269,6 +4684,304 @@
             "Closed",
             "Reversed"
           ]
+        }
+      }
+    },
+    "PublicAccountResponse": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "isContact": {
+          "type": "boolean"
+        },
+        "isoCountryCode": {
+          "type": "string",
+          "enum": [
+            "UNDEFINED",
+            "AC",
+            "AD",
+            "AE",
+            "AF",
+            "AG",
+            "AI",
+            "AL",
+            "AM",
+            "AN",
+            "AO",
+            "AQ",
+            "AR",
+            "AS",
+            "AT",
+            "AU",
+            "AW",
+            "AX",
+            "AZ",
+            "BA",
+            "BB",
+            "BD",
+            "BE",
+            "BF",
+            "BG",
+            "BH",
+            "BI",
+            "BJ",
+            "BL",
+            "BM",
+            "BN",
+            "BO",
+            "BQ",
+            "BR",
+            "BS",
+            "BT",
+            "BU",
+            "BV",
+            "BW",
+            "BY",
+            "BZ",
+            "CA",
+            "CC",
+            "CD",
+            "CF",
+            "CG",
+            "CH",
+            "CI",
+            "CK",
+            "CL",
+            "CM",
+            "CN",
+            "CO",
+            "CP",
+            "CR",
+            "CS",
+            "CU",
+            "CV",
+            "CW",
+            "CX",
+            "CY",
+            "CZ",
+            "DE",
+            "DG",
+            "DJ",
+            "DK",
+            "DM",
+            "DO",
+            "DZ",
+            "EA",
+            "EC",
+            "EE",
+            "EG",
+            "EH",
+            "ER",
+            "ES",
+            "ET",
+            "EU",
+            "FI",
+            "FJ",
+            "FK",
+            "FM",
+            "FO",
+            "FR",
+            "FX",
+            "GA",
+            "GB",
+            "GD",
+            "GE",
+            "GF",
+            "GG",
+            "GH",
+            "GI",
+            "GL",
+            "GM",
+            "GN",
+            "GP",
+            "GQ",
+            "GR",
+            "GS",
+            "GT",
+            "GU",
+            "GW",
+            "GY",
+            "HK",
+            "HM",
+            "HN",
+            "HR",
+            "HT",
+            "HU",
+            "IC",
+            "ID",
+            "IE",
+            "IL",
+            "IM",
+            "IN",
+            "IO",
+            "IQ",
+            "IR",
+            "IS",
+            "IT",
+            "JE",
+            "JM",
+            "JO",
+            "JP",
+            "KE",
+            "KG",
+            "KH",
+            "KI",
+            "KM",
+            "KN",
+            "KP",
+            "KR",
+            "KW",
+            "KY",
+            "KZ",
+            "LA",
+            "LB",
+            "LC",
+            "LI",
+            "LK",
+            "LR",
+            "LS",
+            "LT",
+            "LU",
+            "LV",
+            "LY",
+            "MA",
+            "MC",
+            "MD",
+            "ME",
+            "MF",
+            "MG",
+            "MH",
+            "MK",
+            "ML",
+            "MM",
+            "MN",
+            "MO",
+            "MP",
+            "MQ",
+            "MR",
+            "MS",
+            "MT",
+            "MU",
+            "MV",
+            "MW",
+            "MX",
+            "MY",
+            "MZ",
+            "NA",
+            "NC",
+            "NE",
+            "NF",
+            "NG",
+            "NI",
+            "NL",
+            "NO",
+            "NP",
+            "NR",
+            "NT",
+            "NU",
+            "NZ",
+            "OM",
+            "PA",
+            "PE",
+            "PF",
+            "PG",
+            "PH",
+            "PK",
+            "PL",
+            "PM",
+            "PN",
+            "PR",
+            "PS",
+            "PT",
+            "PW",
+            "PY",
+            "QA",
+            "RE",
+            "RO",
+            "RS",
+            "RU",
+            "RW",
+            "SA",
+            "SB",
+            "SC",
+            "SD",
+            "SE",
+            "SF",
+            "SG",
+            "SH",
+            "SI",
+            "SJ",
+            "SK",
+            "SL",
+            "SM",
+            "SN",
+            "SO",
+            "SR",
+            "SS",
+            "ST",
+            "SU",
+            "SV",
+            "SX",
+            "SY",
+            "SZ",
+            "TA",
+            "TC",
+            "TD",
+            "TF",
+            "TG",
+            "TH",
+            "TJ",
+            "TK",
+            "TL",
+            "TM",
+            "TN",
+            "TO",
+            "TP",
+            "TR",
+            "TT",
+            "TV",
+            "TW",
+            "TZ",
+            "UA",
+            "UG",
+            "UK",
+            "UM",
+            "US",
+            "UY",
+            "UZ",
+            "VA",
+            "VC",
+            "VE",
+            "VG",
+            "VI",
+            "VN",
+            "VU",
+            "WF",
+            "WS",
+            "XK",
+            "YE",
+            "YT",
+            "YU",
+            "ZA",
+            "ZM",
+            "ZR",
+            "ZW"
+          ]
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       }
     },
@@ -5183,6 +5896,38 @@
         "number": {
           "type": "number",
           "format": "double"
+        }
+      }
+    },
+    "AddressRequest": {
+      "type": "object",
+      "required": [
+        "city",
+        "line1",
+        "line2",
+        "postalCode",
+        "stateProvince"
+      ],
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "City"
+        },
+        "line1": {
+          "type": "string",
+          "description": "Address line 1"
+        },
+        "line2": {
+          "type": "string",
+          "description": "Address line 2"
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Postal code"
+        },
+        "stateProvince": {
+          "type": "string",
+          "description": "State or province"
         }
       }
     }
