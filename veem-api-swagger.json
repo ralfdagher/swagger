@@ -2923,9 +2923,6 @@
             "type": "string"
           }
         },
-        "clientId": {
-          "type": "string"
-        },
         "exchangeRate": {
           "$ref": "#/definitions/ExchangeRateResponse"
         },
@@ -3838,9 +3835,6 @@
           "items": {
             "type": "string"
           }
-        },
-        "clientId": {
-          "type": "string"
         },
         "exchangeRate": {
           "$ref": "#/definitions/ExchangeRateResponse"
@@ -6289,9 +6283,6 @@
           "items": {
             "type": "string"
           }
-        },
-        "clientId": {
-          "type": "string"
         },
         "exchangeRate": {
           "$ref": "#/definitions/ExchangeRateResponse"
