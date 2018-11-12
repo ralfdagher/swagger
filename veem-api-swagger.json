@@ -2923,9 +2923,6 @@
             "type": "string"
           }
         },
-        "exchangeRate": {
-          "$ref": "#/definitions/ExchangeRateResponse"
-        },
         "exchangeRateQuoteId": {
           "type": "string",
           "description": "The quote id that was received earlier for the payment"
@@ -3679,7 +3676,6 @@
       "required": [
         "amount",
         "batchItemId",
-        "exchangeRate",
         "exchangeRateQuoteId",
         "id",
         "payee",
@@ -3716,10 +3712,6 @@
         },
         "clientId": {
           "type": "string"
-        },
-        "exchangeRate": {
-          "description": "The exchange rate used associated with the payment",
-          "$ref": "#/definitions/ExchangeRateResponse"
         },
         "exchangeRateQuoteId": {
           "type": "string",
@@ -3835,9 +3827,6 @@
           "items": {
             "type": "string"
           }
-        },
-        "exchangeRate": {
-          "$ref": "#/definitions/ExchangeRateResponse"
         },
         "exchangeRateQuoteId": {
           "type": "string",
@@ -4631,7 +4620,6 @@
       "type": "object",
       "required": [
         "amount",
-        "exchangeRate",
         "exchangeRateQuoteId",
         "id",
         "payer",
@@ -4663,10 +4651,6 @@
         },
         "clientId": {
           "type": "string"
-        },
-        "exchangeRate": {
-          "description": "The exchange rate used associated with the invoice",
-          "$ref": "#/definitions/ExchangeRateResponse"
         },
         "exchangeRateQuoteId": {
           "type": "string",
@@ -5450,7 +5434,6 @@
       "type": "object",
       "required": [
         "amount",
-        "exchangeRate",
         "exchangeRateQuoteId",
         "id",
         "payer",
@@ -5482,10 +5465,6 @@
         },
         "clientId": {
           "type": "string"
-        },
-        "exchangeRate": {
-          "description": "The exchange rate used associated with the invoice",
-          "$ref": "#/definitions/ExchangeRateResponse"
         },
         "exchangeRateQuoteId": {
           "type": "string",
@@ -6283,9 +6262,6 @@
           "items": {
             "type": "string"
           }
-        },
-        "exchangeRate": {
-          "$ref": "#/definitions/ExchangeRateResponse"
         },
         "exchangeRateQuoteId": {
           "type": "string",
