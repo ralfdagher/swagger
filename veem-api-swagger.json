@@ -1681,15 +1681,6 @@
         "parameters": [
           {
             "in": "body",
-            "name": "accessToken",
-            "description": "accessToken",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/OAuth2AccessToken"
-            }
-          },
-          {
-            "in": "body",
             "name": "requests",
             "description": "requests",
             "required": true,
