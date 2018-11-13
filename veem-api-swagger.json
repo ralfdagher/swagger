@@ -114,282 +114,6 @@
         }
       }
     },
-    "/veem/public/v1.0/developer/verify": {
-      "post": {
-        "tags": [
-          "developer-o-auth-controller"
-        ],
-        "summary": "validateClient",
-        "description": "validate client id and domain",
-        "operationId": "validateClientUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "clientRequest",
-            "description": "clientRequest",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ClientRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Request data validated, processing started",
-            "schema": {
-              "$ref": "#/definitions/ResponseEntity"
-            }
-          },
-          "400": {
-            "description": "Invalid request data, no requests were processed",
-            "schema": {
-              "$ref": "#/definitions/ResponseEntity"
-            }
-          },
-          "401": {
-            "description": "Unauthorized, the token is invalid or expired"
-          },
-          "500": {
-            "description": "Internal Server Error, see the error code and API doc for reference"
-          },
-          "403": {
-            "description": "Forbidden, the token owner lacks permission to operate the current API"
-          },
-          "404": {
-            "description": "Not Found, the resource not found"
-          }
-        }
-      }
-    },
-    "/veem/public/v1.0/invoices": {
-      "post": {
-        "tags": [
-          "public-invoice-controller"
-        ],
-        "summary": "createInvoice",
-        "description": "posts an invoice and sends to receiver",
-        "operationId": "createInvoiceUsingPOST_2",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "request",
-            "description": "request",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/InvoiceRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success, an invoice is created in Veem",
-            "schema": {
-              "$ref": "#/definitions/InvoiceResponse"
-            }
-          },
-          "201": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/PublicInvoiceResponse"
-            }
-          },
-          "400": {
-            "description": "Unauthorized, the token is invalid or expired",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized, the token is invalid or expired"
-          },
-          "500": {
-            "description": "Internal Server Error, see the error code and API doc for reference"
-          },
-          "403": {
-            "description": "Forbidden, the token owner doesn't have permission to operate current API"
-          },
-          "404": {
-            "description": "Not Found, the resource not found"
-          }
-        }
-      }
-    },
-    "/veem/public/v1.1/country-currency-map": {
-      "get": {
-        "tags": [
-          "meta-controller"
-        ],
-        "summary": "Country Currency Map",
-        "description": "Returns a list of countries supported and currencies for each",
-        "operationId": "getCountryCurrencyMapUsingGET_1",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "bankFields",
-            "in": "query",
-            "description": "bankFields",
-            "required": false,
-            "type": "boolean",
-            "default": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/CountryCurrencyResponse"
-              }
-            }
-          },
-          "400": {
-            "description": "Unauthorized, the token is invalid or expired",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized, the token is invalid or expired"
-          },
-          "500": {
-            "description": "Internal Server Error, see the error code and API doc for reference"
-          },
-          "403": {
-            "description": "Forbidden, the token owner doesn't have permission to operate current API"
-          }
-        }
-      }
-    },
-    "/veem/public/v1.1/developer/verify": {
-      "post": {
-        "tags": [
-          "developer-o-auth-controller"
-        ],
-        "summary": "validateClient",
-        "description": "validate client id and domain",
-        "operationId": "validateClientUsingPOST_1",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "clientRequest",
-            "description": "clientRequest",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ClientRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Request data validated, processing started",
-            "schema": {
-              "$ref": "#/definitions/ResponseEntity"
-            }
-          },
-          "400": {
-            "description": "Invalid request data, no requests were processed",
-            "schema": {
-              "$ref": "#/definitions/ResponseEntity"
-            }
-          },
-          "401": {
-            "description": "Unauthorized, the token is invalid or expired"
-          },
-          "500": {
-            "description": "Internal Server Error, see the error code and API doc for reference"
-          },
-          "403": {
-            "description": "Forbidden, the token owner lacks permission to operate the current API"
-          },
-          "404": {
-            "description": "Not Found, the resource not found"
-          }
-        }
-      }
-    },
-    "/veem/public/v1.1/invoices": {
-      "post": {
-        "tags": [
-          "public-invoice-controller"
-        ],
-        "summary": "createInvoice",
-        "description": "posts an invoice and sends to receiver",
-        "operationId": "createInvoiceUsingPOST_3",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "request",
-            "description": "request",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/InvoiceRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success, an invoice is created in Veem",
-            "schema": {
-              "$ref": "#/definitions/InvoiceResponse"
-            }
-          },
-          "201": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/PublicInvoiceResponse"
-            }
-          },
-          "400": {
-            "description": "Unauthorized, the token is invalid or expired",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized, the token is invalid or expired"
-          },
-          "500": {
-            "description": "Internal Server Error, see the error code and API doc for reference"
-          },
-          "403": {
-            "description": "Forbidden, the token owner doesn't have permission to operate current API"
-          },
-          "404": {
-            "description": "Not Found, the resource not found"
-          }
-        }
-      }
-    },
     "/veem/v1.0/attachments": {
       "get": {
         "tags": [
@@ -490,15 +214,6 @@
           "application/json"
         ],
         "parameters": [
-          {
-            "in": "body",
-            "name": "contactRequest",
-            "description": "contactRequest",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/ContactRequest"
-            }
-          },
           {
             "name": "batchId",
             "in": "query",
@@ -809,15 +524,6 @@
           "application/json"
         ],
         "parameters": [
-          {
-            "in": "body",
-            "name": "accessToken",
-            "description": "accessToken",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/OAuth2AccessToken"
-            }
-          },
           {
             "in": "body",
             "name": "requests",
@@ -1663,15 +1369,6 @@
           "application/json"
         ],
         "parameters": [
-          {
-            "in": "body",
-            "name": "contactRequest",
-            "description": "contactRequest",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/ContactRequest"
-            }
-          },
           {
             "name": "batchId",
             "in": "query",
@@ -2923,6 +2620,11 @@
             "type": "string"
           }
         },
+        "dueDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The due date of the payment or invoice request"
+        },
         "exchangeRateQuoteId": {
           "type": "string",
           "description": "The quote id that was received earlier for the payment"
@@ -3710,8 +3412,10 @@
           "type": "string",
           "description": "The link that allows the recipient to claim the payment"
         },
-        "clientId": {
-          "type": "string"
+        "dueDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The due date of the payment or invoice request"
         },
         "exchangeRateQuoteId": {
           "type": "string",
@@ -3827,6 +3531,11 @@
           "items": {
             "type": "string"
           }
+        },
+        "dueDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The due date of the payment or invoice request"
         },
         "exchangeRateQuoteId": {
           "type": "string",
@@ -4649,8 +4358,10 @@
           "type": "string",
           "description": "The link that allows the recipient to perform the payment"
         },
-        "clientId": {
-          "type": "string"
+        "dueDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The due date of the payment or invoice request"
         },
         "exchangeRateQuoteId": {
           "type": "string",
@@ -5466,6 +5177,11 @@
         "clientId": {
           "type": "string"
         },
+        "dueDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The due date of the payment or invoice request"
+        },
         "exchangeRateQuoteId": {
           "type": "string",
           "description": "The quote id that was received earlier for the payment"
@@ -6262,6 +5978,11 @@
           "items": {
             "type": "string"
           }
+        },
+        "dueDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The due date of the payment or invoice request"
         },
         "exchangeRateQuoteId": {
           "type": "string",
