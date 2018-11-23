@@ -5945,7 +5945,6 @@
       "type": "object",
       "required": [
         "amount",
-        "exchangeRateQuoteId",
         "payee"
       ],
       "properties": {
@@ -5993,20 +5992,6 @@
           "description": "The receiver of the payment",
           "$ref": "#/definitions/SimpleAccount"
         },
-        "payeeAmount": {
-          "description": "The receiving amount and currency of the payment. Deprecated please use amount instead",
-          "$ref": "#/definitions/AlignMonetaryAmount"
-        },
-        "paymentAction": {
-          "type": "string",
-          "enum": [
-            "SubmitForApproval",
-            "Approve"
-          ]
-        },
-        "paymentApprovalRequest": {
-          "$ref": "#/definitions/PaymentApprovalRequest"
-        },
         "purposeOfPayment": {
           "type": "string",
           "description": "The purpose of payment required by banks for certain countries, applicable for following countries.SG,AE,KR,BR,CN,HK,HR,IS,ID,IN,IL,KE,PK,SA,ZA,TW,UA,VN",
@@ -6015,23 +6000,6 @@
             "Services",
             "Charitable",
             "Other"
-          ]
-        },
-        "status": {
-          "type": "string",
-          "description": "current payment status",
-          "enum": [
-            "Drafted",
-            "Sent",
-            "Claimed",
-            "PendingAuth",
-            "PendingApproval",
-            "Authorized",
-            "InProgress",
-            "Complete",
-            "Cancelled",
-            "Closed",
-            "Reversed"
           ]
         }
       }
