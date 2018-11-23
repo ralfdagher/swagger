@@ -3367,19 +3367,14 @@
     "PaymentResponse": {
       "type": "object",
       "required": [
-        "amount",
+        "payeeAmount",
         "batchItemId",
-        "exchangeRateQuoteId",
         "id",
         "payee",
         "status",
         "timeCreated"
       ],
       "properties": {
-        "amount": {
-          "description": "The amount and currency of the payment",
-          "$ref": "#/definitions/AlignMonetaryAmount"
-        },
         "attachments": {
           "type": "array",
           "description": "The list of external invoices to be attached with payment. The files can be uploaded usingfile upload apis",
@@ -3430,7 +3425,7 @@
           "$ref": "#/definitions/SimpleAccount"
         },
         "payeeAmount": {
-          "description": "The receiving amount and currency of the payment. Deprecated please use amount instead",
+          "description": "The receiving amount and currency of the payment",
           "$ref": "#/definitions/AlignMonetaryAmount"
         },
         "paymentAction": {
