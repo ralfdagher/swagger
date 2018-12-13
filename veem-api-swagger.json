@@ -1713,7 +1713,7 @@
           "200": {
             "description": "A page of Veem customers matching the search criteria is returned",
             "schema": {
-              "$ref": "#/definitions/PublicAccountResponse"
+              "$ref": "#/definitions/Page«PublicAccountResponse»"
             }
           },
           "400": {
