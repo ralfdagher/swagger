@@ -1644,7 +1644,7 @@
         "tags": [
           "contact-controller"
         ],
-        "summary": "Get Contact by ID",
+        "summary": "getContact",
         "description": "Get an account contact by ID",
         "operationId": "getContactUsingGET_1",
         "consumes": [
