@@ -1370,6 +1370,34 @@
         ],
         "parameters": [
           {
+            "name": "email",
+            "in": "query",
+            "description": "email",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "firstName",
+            "in": "query",
+            "description": "firstName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "lastName",
+            "in": "query",
+            "description": "lastName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "businessName",
+            "in": "query",
+            "description": "businessName",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "batchId",
             "in": "query",
             "description": "batchId",
@@ -1420,6 +1448,57 @@
           },
           "400": {
             "description": "Request failed, invalid search parameters"
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner lacks permission to operate the current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "contact-controller"
+        ],
+        "summary": "createContact",
+        "description": "Creates a contact",
+        "operationId": "createContactUsingPOST_1",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "description": "request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ContactRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ContactResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request data, no requests were processed",
+            "schema": {
+              "$ref": "#/definitions/VeemErrorResponse"
+            }
           },
           "401": {
             "description": "Unauthorized, the token is invalid or expired"
@@ -1544,6 +1623,55 @@
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner lacks permission to operate the current API"
+          },
+          "404": {
+            "description": "Not Found, the resource not found"
+          }
+        }
+      }
+    },
+    "/veem/v1.1/contacts/{contactId}": {
+      "get": {
+        "tags": [
+          "contact-controller"
+        ],
+        "summary": "Get Contact by ID",
+        "description": "Get an account contact by ID",
+        "operationId": "getContactUsingGET_1",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "description": "contactId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Found and returned contact",
+            "schema": {
+              "$ref": "#/definitions/ContactResponse"
+            }
+          },
+          "400": {
+            "description": "Request failed, invalid parameters"
           },
           "401": {
             "description": "Unauthorized, the token is invalid or expired"
@@ -2065,6 +2193,17 @@
             ]
           },
           {
+            "name": "sort",
+            "in": "query",
+            "description": "sort",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
             "name": "pageNumber",
             "in": "query",
             "description": "pageNumber",
@@ -2452,6 +2591,69 @@
         "totalItems": {
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "ContactRequest": {
+      "type": "object",
+      "required": [
+        "email",
+        "firstName",
+        "lastName",
+        "isoCountryCode",
+        "phoneDialCode",
+        "phoneNumber"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "The contact's email address"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The contact's first name"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The contact's last name"
+        },
+        "isoCountryCode": {
+          "type": "string",
+          "description": "The contact's 2-letter ISO country code (ISO Alpha-2)"
+        },
+        "phoneDialCode": {
+          "type": "string",
+          "description": "The contact's phone dial code (e.g. +1)"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The contact's phone number"
+        },
+        "type": {
+          "type": "string",
+          "description": "The contact type",
+          "enum": [
+            "Incomplete",
+            "Business",
+            "Personal"
+          ]
+        },
+        "businessName": {
+          "type": "string",
+          "description": "The name of the contact's business (required when account type is business)"
+        },
+        "externalBusinessId": {
+          "type": "integer",
+          "format": "int64",
+          "description": "A custom identifier for this contact"
+        },
+        "bankAccount": {
+          "description": "The contact's bank information",
+          "$ref": "#/definitions/BankAccountRequest"
+        },
+        "businessAddress": {
+          "description": "The contact's business address",
+          "$ref": "#/definitions/AddressRequest"
         }
       }
     },
@@ -3371,7 +3573,8 @@
         "id",
         "payee",
         "status",
-        "timeCreated"
+        "timeCreated",
+        "timeUpdated"
       ],
       "properties": {
         "attachments": {
@@ -3476,6 +3679,11 @@
           "type": "string",
           "format": "date-time",
           "description": "The creation time of the payment. The format would be UTC, ISO-8601"
+        },
+        "timeUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The most recent update time of the payment. The format would be UTC, ISO-8601"
         }
       }
     },
@@ -4807,11 +5015,11 @@
     "ContactResponse": {
       "type": "object",
       "required": [
-        "businessName",
         "contactAccountId",
         "dialCode",
         "email",
         "firstName",
+        "id",
         "isoCountryCode",
         "lastName",
         "phoneNumber"
@@ -4842,6 +5050,11 @@
         "firstName": {
           "type": "string",
           "description": "The contact's first name"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The contact's id"
         },
         "isoCountryCode": {
           "type": "string",
@@ -5733,6 +5946,43 @@
             "COMPLETED",
             "FAILED"
           ]
+        }
+      }
+    },
+    "VeemErrorResponse": {
+      "type": "object",
+      "required": [
+        "code",
+        "logTag",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The error code, different than HTTP status codes"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The filename where the exception was thrown"
+        },
+        "lineNumber": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The line number where the exception was thrown"
+        },
+        "logTag": {
+          "type": "string",
+          "description": "Request log tag"
+        },
+        "message": {
+          "type": "string",
+          "description": "The detailed, developer friendly message"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp recorded when the error occurred"
         }
       }
     },
