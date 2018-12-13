@@ -2195,7 +2195,7 @@
           {
             "name": "sort",
             "in": "query",
-            "description": "sort",
+            "description": "Current sort field options are: timeUpdated. Append :asc or :desc to control the sort direction",
             "required": false,
             "type": "array",
             "items": {
