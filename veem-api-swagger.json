@@ -259,7 +259,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/ContactResponse"
+                "$ref": "#/definitions/Page«ContactResponse»"
               }
             }
           },
@@ -1442,7 +1442,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/ContactResponse"
+                "$ref": "#/definitions/Page«ContactResponse»"
               }
             }
           },
@@ -1715,7 +1715,7 @@
           "200": {
             "description": "A page of Veem customers matching the search criteria is returned",
             "schema": {
-              "$ref": "#/definitions/Page«PublicAccountResponse»"
+              "$ref": "#/definitions/PublicAccountResponse"
             }
           },
           "400": {
