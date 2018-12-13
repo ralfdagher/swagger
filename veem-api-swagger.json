@@ -932,7 +932,7 @@
           "200": {
             "description": "Success, a page of payment objects is returned",
             "schema": {
-              "$ref": "#/definitions/PaymentResponse"
+              "$ref": "#/definitions/Page«PaymentResponse»"
             }
           },
           "400": {
@@ -2226,7 +2226,7 @@
           "200": {
             "description": "Success, a page of payment objects is returned",
             "schema": {
-              "$ref": "#/definitions/PaymentResponse"
+              "$ref": "#/definitions/Page«PaymentResponse»"
             }
           },
           "400": {
