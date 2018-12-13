@@ -257,7 +257,6 @@
           "200": {
             "description": "Success, all matching contacts were returned",
             "schema": {
-              "type": "array",
               "items": {
                 "$ref": "#/definitions/Page«ContactResponse»"
               }
@@ -1440,7 +1439,6 @@
           "200": {
             "description": "Success, all matching contacts were returned",
             "schema": {
-              "type": "array",
               "items": {
                 "$ref": "#/definitions/Page«ContactResponse»"
               }
