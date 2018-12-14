@@ -4919,8 +4919,7 @@
       }
     },
     "BankAccountRequest": {
-      "type": "object",
-      "nullable":"true",
+      "type": ["object", "null"],
       "properties": {
         "bankAccountNumber": {
           "type": "string"
@@ -7456,8 +7455,7 @@
       }
     },
     "AddressRequest": {
-      "type": "object",
-      "nullable": "true",
+      "type": ["object", "null"],
       "required": [
         "city",
         "line1",
