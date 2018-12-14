@@ -2643,12 +2643,10 @@
         },
         "bankAccount": {
           "description": "The contact's bank information",
-          "nullable":"true",
           "$ref": "#/definitions/BankAccountRequest"
         },
         "businessAddress": {
           "description": "The contact's business address",
-          "nullable":"true",
           "$ref": "#/definitions/AddressRequest"
         }
       }
@@ -4922,6 +4920,7 @@
     },
     "BankAccountRequest": {
       "type": "object",
+      "nullable":"true",
       "properties": {
         "bankAccountNumber": {
           "type": "string"
@@ -7458,6 +7457,7 @@
     },
     "AddressRequest": {
       "type": "object",
+      "nullable": "true",
       "required": [
         "city",
         "line1",
