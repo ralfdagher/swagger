@@ -2643,10 +2643,12 @@
         },
         "bankAccount": {
           "description": "The contact's bank information",
+          "nullable":"true",
           "$ref": "#/definitions/BankAccountRequest"
         },
         "businessAddress": {
           "description": "The contact's business address",
+          "nullable":"true",
           "$ref": "#/definitions/AddressRequest"
         }
       }
