@@ -5353,7 +5353,6 @@
         "fromCurrency",
         "id",
         "rate",
-        "timeCreated",
         "toAmount",
         "toCurrency"
       ],
@@ -5565,11 +5564,6 @@
           "type": "number",
           "format": "double",
           "description": "The Veem exchange rate for current transfer"
-        },
-        "timeCreated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The quote generation time"
         },
         "toAmount": {
           "type": "number",
