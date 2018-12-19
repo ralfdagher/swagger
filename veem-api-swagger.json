@@ -718,58 +718,6 @@
         }
       }
     },
-    "/veem/v1.0/invoices/{invoiceId}/approve": {
-      "post": {
-        "tags": [
-          "invoice-controller"
-        ],
-        "summary": "approveInvoice",
-        "description": "approve an invoice",
-        "operationId": "approveInvoiceUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "invoiceId",
-            "in": "path",
-            "description": "invoiceId",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success, an approved invoice object is returned",
-            "schema": {
-              "$ref": "#/definitions/InvoiceResponse"
-            }
-          },
-          "400": {
-            "description": "Unauthorized, the token is invalid or expired",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized, the token is invalid or expired"
-          },
-          "500": {
-            "description": "Internal Server Error, see the error code and API doc for reference"
-          },
-          "403": {
-            "description": "Forbidden, the token owner doesn't have permission to operate current API"
-          },
-          "404": {
-            "description": "Not Found, the resource not found"
-          }
-        }
-      }
-    },
     "/veem/v1.0/invoices/{invoiceId}/cancel": {
       "post": {
         "tags": [
@@ -1973,58 +1921,6 @@
         "responses": {
           "200": {
             "description": "Success, an invoice object is returned",
-            "schema": {
-              "$ref": "#/definitions/InvoiceResponse"
-            }
-          },
-          "400": {
-            "description": "Unauthorized, the token is invalid or expired",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized, the token is invalid or expired"
-          },
-          "500": {
-            "description": "Internal Server Error, see the error code and API doc for reference"
-          },
-          "403": {
-            "description": "Forbidden, the token owner doesn't have permission to operate current API"
-          },
-          "404": {
-            "description": "Not Found, the resource not found"
-          }
-        }
-      }
-    },
-    "/veem/v1.1/invoices/{invoiceId}/approve": {
-      "post": {
-        "tags": [
-          "invoice-controller"
-        ],
-        "summary": "approveInvoice",
-        "description": "approve an invoice",
-        "operationId": "approveInvoiceUsingPOST_1",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "invoiceId",
-            "in": "path",
-            "description": "invoiceId",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success, an approved invoice object is returned",
             "schema": {
               "$ref": "#/definitions/InvoiceResponse"
             }
