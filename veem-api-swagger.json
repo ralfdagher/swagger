@@ -2351,6 +2351,138 @@
         }
       }
     },
+    "/veem/v1.1/payments/simple": {
+      "get": {
+        "tags": [
+          "payment-controller"
+        ],
+        "summary": "getPaymentsSimple",
+        "description": "Get incoming or outgoing payments for this account with filters and sorting",
+        "operationId": "getPaymentsSimpleUsingGET_1",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "direction",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Inbound",
+              "Outbound"
+            ]
+          },
+          {
+            "name": "paymentIds",
+            "in": "query",
+            "description": "paymentIds",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "status",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Drafted",
+                "Sent",
+                "Claimed",
+                "PendingAuth",
+                "PendingApproval",
+                "Authorized",
+                "InProgress",
+                "Complete",
+                "Cancelled",
+                "Closed",
+                "Reversed",
+                "Scheduled"
+              ]
+            },
+            "collectionFormat": "multi",
+            "enum": [
+              "Drafted",
+              "Sent",
+              "Claimed",
+              "PendingAuth",
+              "PendingApproval",
+              "Authorized",
+              "InProgress",
+              "Complete",
+              "Cancelled",
+              "Closed",
+              "Reversed",
+              "Scheduled"
+            ]
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "sort",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "pageNumber",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "pageSize",
+            "required": false,
+            "type": "integer",
+            "default": 25,
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, a page of payment objects is returned",
+            "schema": {
+              "$ref": "#/definitions/SimplePaymentResponse"
+            }
+          },
+          "400": {
+            "description": "Unauthorized, the token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/VeemErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, the token is invalid or expired"
+          },
+          "500": {
+            "description": "Internal Server Error, see the error code and API doc for reference"
+          },
+          "403": {
+            "description": "Forbidden, the token owner doesn't have permission to operate current API"
+          }
+        }
+      }
+    },
     "/veem/v1.1/payments/{paymentId}": {
       "get": {
         "tags": [
@@ -3616,6 +3748,46 @@
           "type": "string",
           "format": "date-time",
           "description": "The most recent update time of the payment. The format would be UTC, ISO-8601"
+        }
+      }
+    },
+    "Page«SimplePaymentResponse»": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SimplePaymentResponse"
+          }
+        },
+        "first": {
+          "type": "boolean"
+        },
+        "last": {
+          "type": "boolean"
+        },
+        "number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "numberOfElements": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "totalElements": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -4935,6 +5107,67 @@
         "totalItems": {
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "SimplePaymentResponse": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "description": "The amount and currency of the payment",
+          "$ref": "#/definitions/AlignMonetaryAmount"
+        },
+        "attachments": {
+          "type": "array",
+          "description": "The list of external invoices to be attached with payment. The files can be uploaded using file upload apis",
+          "items": {
+            "$ref": "#/definitions/FileAttachment"
+          }
+        },
+        "claimLink": {
+          "type": "string",
+          "description": "The link that allows the recipient to claim the payment"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The payment ID"
+        },
+        "invoiceId": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The invoice being paid (if applicable)"
+        },
+        "payee": {
+          "description": "The receiver of the payment",
+          "$ref": "#/definitions/SimpleAccount"
+        },
+        "payer": {
+          "description": "The sender of the payment",
+          "$ref": "#/definitions/SimpleAccount"
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the payment",
+          "enum": [
+            "Drafted",
+            "Sent",
+            "Claimed",
+            "PendingAuth",
+            "PendingApproval",
+            "Authorized",
+            "InProgress",
+            "Complete",
+            "Cancelled",
+            "Closed",
+            "Reversed",
+            "Scheduled"
+          ]
+        },
+        "timeSent": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The creation time of the payment. The format is ISO-8601."
         }
       }
     },
